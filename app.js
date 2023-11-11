@@ -39,19 +39,22 @@ app.use(prefix+'/booking',require('./routes/booking'))
 app.use(prefix+'/checkin',require('./routes/checkin'))
 app.use(prefix+'/payment',require('./routes/payment'))
 // catch 404 and forward to error handler
-app.use(function(req, res, next) {
-  next(createError(404));
-});
+// app.use(function(req, res, next) {
+//   next(createError(404));
+// });
 
-// error handler
-app.use(function(err, req, res, next) {
-  // set locals, only providing error in development
-  res.locals.message = err.message;
-  res.locals.error = req.app.get('env') === 'development' ? err : {};
+// // error handler
+// app.use(function(err, req, res, next) {
+//   // set locals, only providing error in development
+//   res.locals.message = err.message;
+//   res.locals.error = req.app.get('env') === 'development' ? err : {};
 
-  // render the error page
-  res.status(err.status || 500);
-  res.render('error');
-});
+//   // render the error page
+//   res.status(err.status || 500);
+//   res.render('error');
+// });
 
-module.exports = app;
+// module.exports = app;
+
+const port = process.env.PORT || 4444;
+app.listen(port, console.log(`Listening on port ${port}`));
