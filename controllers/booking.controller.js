@@ -31,7 +31,7 @@ module.exports.addbooking = async (req, res) => {
       res.status(400).send({message: "กรุณากรอกข้อมูลให้ครบ"});
     }
     //เช็คว่ามีข้อมูลใน member hotel room data หรือเปล่า
-    const member = await Member.findOne({_id: member_id});
+    const member = await Member.findOne({_id:member_id});
     if (!member) {
       res.status(400).send({message: "หาข้อมูล member ไม่เจอ"});
     }

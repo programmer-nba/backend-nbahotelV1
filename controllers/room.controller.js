@@ -8,7 +8,7 @@ const RoomAmenities = require('../models/room.amenities.schema')
 const RoomEntertainment = require('../models/room.entertainment.schema')
 const RoomStatus = require('../models/room.statustype.schema')
 const RoomView = require('../models/room.viewtype.schema')
-const RoomService = require('../models/room.security.schema')
+const RoomService = require('../models/room.service.schema')
 const RoomType = require('../models/room.type.schema')
 const { Hotel } = require('../models/hotel.schema');
 const SecurityType = require('../models/room.security.schema');
@@ -18,7 +18,7 @@ const SecurityType = require('../models/room.security.schema');
 //get all
 module.exports.GetAll = async (req, res) => {
     try {
-        const result = await Room.find();
+        const result = await Room.find().populate('hotel_id');
         if (!result) {
             return res.status(404).send({ message:'No Room found'});
         }
@@ -135,7 +135,6 @@ module.exports.Create = async (req, res) => {
 
             const container = await RoomService.findById(el);
             if (container) {
-                console.log('room service', container);
                 roomServices.push(container);
             }
             else {
@@ -378,10 +377,8 @@ module.exports.Update = async (req, res) => {
 module.exports.Delete = async (req, res) => {
     const id = req.params.id;
     try {
-
-        await Room.findByIdAndDelete(id, null)
-        return res.status(200).send('ลบข้อมูลห้องสำเร็จ')
-
+        const deletes =await Room.findByIdAndDelete(id, null)
+        return res.status(200).send({status:true,message:'ลบข้อมูลห้องสำเร็จ',data:deletes})
     } catch (error) {
         return res.status(500).send({ message: err.message });
     }

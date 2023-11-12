@@ -4,7 +4,7 @@ const mongoose = require('mongoose');
 const hotelSchema = new mongoose.Schema({
     host_id:{ type:String,required:true},
     name: { type: String, required: true },
-    category: { type : {name:{type:String},description:{type:String}},required:true},
+    category: {type:mongoose.Schema.Types.ObjectId,ref:'HotelCategory',require:true},
     phone_number: { type: [String],required : true},
     description: { type: String },
     address: { type: String, required: true },
@@ -17,7 +17,7 @@ const hotelSchema = new mongoose.Schema({
     rating: { type: Number },
     total_rate: { type: Number},
     image_url: { type: [String]} ,
-    amenities: { type: [{name:{type:String},description:{type:String}}] }, //สิ่งอำนวยความสะดวก
+    amenities:{ type: [{name:{type:String},description:{type:String}}] } , //สิ่งอำนวยความสะดวก
     highlight : { type: [{name:{type:String},description:{type:String}}] },
     certificate:{ type: [{name:{type:String},description:{type:String}}] },
     special_service: { type: [{name:{type:String},description:{type:String}}] },

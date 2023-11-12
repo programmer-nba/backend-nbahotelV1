@@ -37,9 +37,39 @@ module.exports.GetById = async (req,res) =>{
 module.exports.Create = async (req,res)=>{
     try {
 
-        const category = await Category.findById(req.body.category_id);
+        const category = await Category.findById(req.body.category);
         if(!category){
             return res.status(404).send({message:'no category'});
+        }
+         //hotel amenities
+        let amenities = [];
+        if(req.body.amenities){
+            for(let id of req.body.amenities){
+                const container = await Amenities.findById(id);
+                if(container){
+                    amenities.push(container);
+                }
+            }        
+        }
+        //hotel highlight
+        let highlights =[]
+        if(req.body.highlight){
+            for(let id of req.body.highlight){
+                const container = await Highlights.findById(id);
+                if(container){
+                    highlights.push(container); 
+                }
+            }
+        }
+        //hotel certificates
+        let certificates = [];
+        if(req.body.certificate){
+             for(let id of req.body.certificate){
+                const container = await Certificates.findById(id);
+                 if(container){
+                    certificates.push(container);    
+                }
+            }
         }
         // เรียก token มาดึง partner_id
         let token = req.headers["token"]
@@ -64,8 +94,9 @@ module.exports.Create = async (req,res)=>{
             rating: 0,
             total_rate: 0,
             image_url: [] , //เริ่มต้นค่าว่าง
-            amenities: [], //สิ่งอำนวยความสะดวก
-            highlight : [], //เริ่มต้นค่าว่าง
+            amenities: amenities, //สิ่งอำนวยความสะดวก
+            highlight : highlights, //เริ่มต้นค่าว่าง
+            certificate:certificates,
             special_service:[],//เริ่มต้นค่าว่าง
             nearly_place: [],
             parking : req.body.parking,
@@ -148,7 +179,7 @@ module.exports.Update = async (req,res) =>{
     }
    
 
-    let category = await Category.findById(req.body.category_id);
+    let category = await Category.findById(req.body.category);
 
     if(!category){
         category = hotel.category;
