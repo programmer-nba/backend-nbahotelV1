@@ -95,7 +95,7 @@ router.post('/', async(req,res)=>{
   }
 })
 
-router.post('/me/',MemberAuth.all,async(req,res)=>{
+router.get('/me/',MemberAuth.all,async(req,res)=>{
   try {  
     const token = req.headers['token'];
     if(!token){
