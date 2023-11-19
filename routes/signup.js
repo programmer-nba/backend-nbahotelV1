@@ -37,7 +37,6 @@ router.post("/member", async (req, res) => {
       firstname: req.body.firstname,
       lastname: req.body.lastname,
       email: req.body.email,
-      telephone_inviter: req.body.telephone_inviter,
       roles: req.body.roles,
     });
     //เพิ่มข้อมูล
@@ -71,7 +70,12 @@ router.post("/partner", async (req, res) => {
       telephone: telephone,
       password: bcrypt.hashSync(req.body.password, 10),
       name: req.body.name,
-      companyname: req.body.companyname,
+      idcard:req.body.idcard,
+      image_idcard:req.body.image_idcard,
+      address:req.body.address,
+      tambon:req.body.tambon,
+      amphure:req.body.amphure,
+      province:req.body.province,
       level : req.body.level,
     });
     //เพิ่มข้อมูล

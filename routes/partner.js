@@ -88,11 +88,12 @@ router.put('/unapprove/:id',adminAuth, async(req,res)=>{
 router.put('/:id',paramsAuth.onlypartner, async(req,res)=>{
     try{
         const id = req.params.id
+        const checkofpartner = await Partner.findOne({_id:id})
         const telephone = req.body.telephone
-        const password = bcrypt.hashSync(req.body.password, 10)
+        const password = ( req.body.password!= undefined? bcrypt.hashSync(req.body.password, 10):checkofpartner.password)
         const name = req.body.name
         //เช็คเลขซ้ำ
-        const checkofpartner = await Partner.findOne({_id:id})
+        
         if(!checkofpartner){
             return res.status(400).send({status:false,message:`หาข้อมูลไม่เจอ`})
         }
@@ -120,7 +121,11 @@ router.put('/:id',paramsAuth.onlypartner, async(req,res)=>{
             telephone: telephone,
             password :password,
             name : name,
-            companyname: companyname,
+            idcard:req.body.idcard,
+            address:req.body.address,
+            tambon:req.body.tambon,
+            amphure:req.body.amphure,
+            province:req.body.province,
             level : level
         }
         const editpartner = await Partner.findByIdAndUpdate(id,partnerdata,{ new: true })

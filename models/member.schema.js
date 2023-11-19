@@ -8,7 +8,6 @@ const MemberSchema = new mongoose.Schema({
   firstname:{ type: String},
   lastname:{ type: String},
   email: { type: String},
-  telephone_inviter:{type: String,},
   roles:{type: String, required: true},
   service_name:{ type: String},
   service_id:{ type: String},

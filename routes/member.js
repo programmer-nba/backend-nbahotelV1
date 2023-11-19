@@ -78,8 +78,7 @@ router.put('/:id',memberAuth.verifyTokenmember, async (req,res)=>{
                 return res.status(400).send({status:false,message:`ชื่อ ${name} ซ้ำ กรุณาเปลี่ยนใหม่`})
             }
         }
-
-        const password = bcrypt.hashSync(req.body.password, 10)
+        const password = ( req.body.password!= undefined? bcrypt.hashSync(req.body.password, 10):checkofmember.password)
         const firstname = req.body.firstname
         const lastname =  req.body.lastname
         const email = req.body.email    
