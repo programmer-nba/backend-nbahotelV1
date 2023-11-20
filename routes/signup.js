@@ -45,7 +45,7 @@ router.post("/member", async (req, res) => {
     })
   } catch (error) {
     console.log(error);
-    return res.status(500).send({status: false, message: error});
+    return res.status(500).send({status: false, message: error.message});
   }
 });
 //เพิ่มข้อมูล partner
