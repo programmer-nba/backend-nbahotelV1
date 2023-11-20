@@ -6,7 +6,7 @@ const partnerAuth = require('../authentication/partnerAuth')
 const Room = require('../controllers/room.controller')
 const picture = require('../controllers/room.picture.controller')
 const RoomType = require('../controllers/room.type.controller')
-
+const Room_status = require('../controllers/room_status.controller')
 // // room standard infomation
 
 
@@ -31,10 +31,10 @@ router.post('/picture/:id',partnerAuth.onlypartner,picture.Create)
 router.delete('/picture/:id/:pictureid',partnerAuth.onlypartner,picture.Delete)
 
 // admin อนุมัติห้อง
-router.put('/approve/:id')
-router.put('/unapprove/:id')
+router.put('/approve/:id',adminAuth,Room_status.approve)
+router.put('/unapprove/:id',adminAuth,Room_status.unapprove)
 
 // partner เปิด-ปิด ห้องทั้งหมด
-router.put('/openstatus/')
-router.put('/closestatus/')
+router.put('/openstatus/',partnerAuth.onlypartner,Room_status.openstatus)
+router.put('/closestatus/',partnerAuth.onlypartner,Room_status.closestatus)
 module.exports = router;

@@ -47,14 +47,27 @@ module.exports.openstatus = async (req,res)=>{
         {
             return res.status(404).send({status:false,message:'หา id partner ไม่เจอ'})
         }
-        const room = await Room.findByIdAndUpdate({partner_id:})
-
+        const edit = await Room.updateMany({partner_id:partner._id},{statusbooking:true},{ new: true })
+        return res.status(200).send({status:true,message:`ไอดี ${partner.name} เปิดการจองเรียบร้อยแล้ว`})
     }catch(error){
         return res.status(500).send({status:false,error:error.message});
     }  
-    
 }
 
 module.exports.closestatus = async (req,res)=>{
-    const id = req.params.id
+    try{
+        let token = req.headers["token"]
+        const secretKey = "i#ngikanei;#aooldkhfa'"
+        const decoded =  await jwt.verify(token,secretKey)
+        // ทำการดึงข้อมูล id ใน partner
+        const partner = await Partner.findOne({name:decoded.name})
+        if(!partner)
+        {
+            return res.status(404).send({status:false,message:'หา id partner ไม่เจอ'})
+        }
+        const edit = await Room.updateMany({partner_id:partner._id},{statusbooking:false},{ new: true })
+        return res.status(200).send({status:true,message:`ไอดี ${partner.name} เปิดการจองเรียบร้อยแล้ว`})
+    }catch(error){
+        return res.status(500).send({status:false,error:error.message});
+    }  
 }
