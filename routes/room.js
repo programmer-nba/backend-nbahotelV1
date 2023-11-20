@@ -19,8 +19,8 @@ router.delete('/type/:id',adminAuth,RoomType.Delete)
 
 // main room routes
 router.get('/',Room.GetAll)
+router.get('/partner/',partnerAuth.onlypartner,Room.GetPartner)
 router.get('/:id',Room.GetById)
-router.get('/hotel/:id',Room.GetHotelRoom)
 router.post('/hotel/',partnerAuth.onlypartner,Room.Create)
 router.patch('/:id',partnerAuth.onlypartner,Room.Update)
 

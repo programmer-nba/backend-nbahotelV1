@@ -28,11 +28,18 @@ module.exports.GetById = async (req, res) => {
     }
 }
 
-//get all room by hotel id
-module.exports.GetHotelRoom = async (req,res) => {
-    const id = req.params.id;
+//get all room by partner
+module.exports.GetPartner = async (req,res) => {
+    
     try {
-        const result = await Room.find({ hotel_id: id });
+         // เรียก token มาดึง partner_id
+         let token = req.headers["token"]
+         const secretKey = "i#ngikanei;#aooldkhfa'"
+         const decoded =  await jwt.verify(token,secretKey)
+         // ทำการดึงข้อมูล id ใน partner
+         const partner = await Partner.findOne({name:decoded.name})
+
+        const result = await Room.find({ partner_id: partner._id }).populate('partner_id').populate('type');
         if (!result) {
             return res.status(404).send('Hotel room not found');
         }
