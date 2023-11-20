@@ -49,7 +49,7 @@ module.exports.addbooking = async (req, res) => {
     const add = await booking.save();
     res.status(200).send(add);
   } catch (error) {
-    res.status(500).send({message: error.message});
+    return res.status(500).send({status:false,error:error.message});
   }
 }
 
@@ -86,7 +86,7 @@ module.exports.GetByid = async (req, res) => {
     }
     return res.status(200).send(booking);
   } catch (error) {
-    return res.status(500).send({message: error.message});
+    return res.status(500).send({status:false,error:error.message});
   }
 };
 
@@ -108,7 +108,7 @@ module.exports.GetByhotel = async (req, res) => {
     }
     return res.status(200).send(booking);
   } catch (error) {
-    return res.status(500).send({message: error.message});
+    return res.status(500).send({status:false,error:error.message});
   }
 };
 //เรียกข้อมูลการจองตาม room_id
@@ -128,7 +128,7 @@ module.exports.GetByroom = async (req, res) => {
     }
     return res.status(200).send(booking);
   } catch (error) {
-    return res.status(500).send({message: error.message});
+    return res.status(500).send({status:false,error:error.message});
   }
 };
 //เรียกข้อมูลการจองตาม member
@@ -143,7 +143,7 @@ module.exports.GetBymember = async (req, res) => {
     }
     return res.status(200).send(booking);
   } catch (error) {
-    return res.status(500).send({message: error.message});
+    return res.status(500).send({status:false,error:error.message});
   }
 };
 
@@ -178,7 +178,7 @@ module.exports.AcceptBooking = async (req, res) => {
       update: edit,
     });
   } catch (error) {
-    return res.status(500).send({message: error.message});
+    return res.status(500).send({status:false,error:error.message});
   }
 };
 //  partner ไม่อนุมัติห้อง
@@ -269,7 +269,7 @@ module.exports.Payment = async (req, res) => {
    
     
   } catch (error) {
-    return res.status(500).send({message: error.message});
+    return res.status(500).send({status:false,error:error.message});
   }
 };
 

@@ -53,8 +53,7 @@ module.exports.VerifyCheckedInUser = async (req,res) =>{
         return res.status(500).send(error.message)
     });
 } catch (error) {
-        console.log(error);
-        return res.status(500).send(error.message);
+    return res.status(500).send({status:false,error:error.message});
 }
 }
 
@@ -124,7 +123,7 @@ try {
 
 
 } catch (error) {
-    console.log(error);
+    return res.status(500).send({status:false,error:error.message});
 }
 }
 
@@ -172,7 +171,7 @@ module.exports.CheckOut = async (req,res) =>{
             message:'checkout successfully'
         })
     } catch (error) {
-        return res.status(500).send({message:error.message});
+        return res.status(500).send({status:false,error:error.message});
     }
 }
 
@@ -199,7 +198,7 @@ module.exports.FakeCheckin = async (req, res) => {
         console.log('booking was updated',edit);
         return res.send('ok')
     } catch (error) {
-        return res.status(500).send(error)
+        return res.status(500).send({status:false,error:error.message});
     }
 }
 
@@ -223,7 +222,7 @@ module.exports.FakeCheckout = async (req, res) => {
         console.log('booking was updated',edit)
         return res.send('ok')
     } catch (error) {
-        return res.status(500).send(error)
+        return res.status(500).send({status:false,error:error.message});
     }
 }
 
@@ -247,6 +246,6 @@ module.exports.FakeAccept = async (req, res) => {
         console.log('booking was updated',edit)
         return res.send('ok')
     } catch (error) {
-        return res.status(500).send(error)
+        return res.status(500).send({status:false,error:error.message});
     }
 }

@@ -7,7 +7,7 @@ module.exports.GetAll = async (req,res) =>{
             return res.status(200).send(roomType);
         }
     } catch (error) {
-        return res.status(500).send({message:error.message});
+        return res.status(500).send({status:false,error:error.message});
     }
 }
 
@@ -22,8 +22,7 @@ module.exports.Create= async (req,res) =>{
         const add = await roomType.save()
         return res.status(200).send(add)
     } catch (error) {
-        return res.status(500).send({message:err.message});
-        
+        return res.status(500).send({status:false,error:error.message}); 
     }
     
 }
@@ -39,7 +38,7 @@ module.exports.Update = async (req,res) => {
         const edit = await RoomType.findOneAndUpdate({_id:id},data,{returnOriginal:false})
         return res.status(200).send(edit)
     } catch (error) {
-        return res.status(500).send({message:error.message});
+        return res.status(500).send({status:false,error:error.message});
     }
 }
 
@@ -49,6 +48,6 @@ module.exports.Delete = async (req,res) => {
         const deletes = await RoomType.findOneAndDelete({_id:req.params.id})
         return res.status(200).send({message:'ลบข้อมูลประเภทห้องสำเร็จ',data:deletes})
     } catch (error) {
-        return res.status(500).send({message:error.message});       
+        return res.status(500).send({status:false,error:error.message});    
     }
 }

@@ -52,7 +52,7 @@ router.put('/approve/:id',adminAuth, async(req,res)=>{
             timestamps: new Date()
           };
           
-        const approvepartner = await Partner.findByIdAndUpdate({ _id: id },{ $push: { approve: newStatus },status:true },{ new: true })
+        const approvepartner = await Partner.findByIdAndUpdate({ _id: id },{ $push: { approve: newStatus},status:true ,statusbooking:true},{ new: true })
         if(!approvepartner){
             return res.status(404).send({status:false,message:"id ที่ส่งมาไม่มีในข้อมูล partner"})
         }

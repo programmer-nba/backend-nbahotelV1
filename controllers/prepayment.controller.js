@@ -24,7 +24,7 @@ module.exports.GetAll = async (req,res) =>{
             return res.status(200).send(prePayment);
         }
     } catch (error) {
-        return res.status(500).send({message:error.message});
+      return res.status(500).send({status:false,error:error.message});
     }
 }
 
@@ -45,8 +45,7 @@ module.exports.GetHotelPaymentSlip = async (req,res) => {
         return res.status(200).send(payments);
         
     } catch (error) {
-        console.error(error.message);
-        return res.status(500).send(error.message);
+      return res.status(500).send({status:false,error:error.message});
     }
 }
 
@@ -85,8 +84,7 @@ module.exports.GetByid = async (req,res) => {
 //         return res.status(200).send(payment);
         
 //     } catch (error) {
-//         console.error(error.message);
-//         return res.status(500).send(error.message);
+//       return res.status(500).send({status:false,error:error.message});
 //     }
 // }
 
@@ -205,8 +203,7 @@ module.exports.GetByid = async (req,res) => {
 //         }
 
 //     } catch (error) {
-//         console.error(error);
-//         return res.status(500).send({message:error.message})
+//        return res.status(500).send({status:false,error:error.message});
 //     }
 
 // }
@@ -270,8 +267,7 @@ module.exports.GetByid = async (req,res) => {
 
 
 // } catch (error) {
-//         console.error(error);
-//         return res.status(500).send({message:error.message});    
+//       return res.status(500).send({status:false,error:error.message});
 //     }
 
 // }

@@ -35,7 +35,7 @@ router.put('/checkin/:id',memberAuth.verifyTokenmember, async (req,res)=>{
             return res.status(200).send({status:true,message:'คุณได้เช็คอินแล้ว',check_in_out:add})
         }        
     } catch (error) {
-        return res.status(500).send({message: error.message})
+        return res.status(500).send({status:false,error:error.message});
     }
 })
 
@@ -52,7 +52,7 @@ router.put('/checkout/:id',memberAuth.verifyTokenmember, async (req,res)=>{
             return res.status(200).send({status:true,message:'คุณได้เช็คเอาท์แล้ว',check_in_out:update})
         }        
     } catch (error) {
-        return res.status(500).send({message: error.message})
+        return res.status(500).send({status:false,error:error.message});
     }
 })
 
@@ -62,7 +62,7 @@ router.get('/',memberAuth.memberandpartner, async(req,res)=>{
         const booking = await Checkin_out.find().populate('booking_id')
         return res.status(200).send(booking);
       } catch (error) {
-        return res.status(500).send({message: error.message});
+        return res.status(500).send({status:false,error:error.message});
       }
 })
 
@@ -75,7 +75,7 @@ router.get('/:id',memberAuth.memberandpartner, async(req,res)=>{
         }
         return res.status(200).send(booking);
       } catch (error) {
-        return res.status(500).send({message: error.message});
+        return res.status(500).send({status:false,error:error.message});
       }
 })
 
@@ -88,7 +88,7 @@ router.get('/booking/:id',memberAuth.memberandpartner, async(req,res)=>{
         }
         return res.status(200).send(booking);
       } catch (error) {
-        return res.status(500).send({message: error.message});
+        return res.status(500).send({status:false,error:error.message});
       }
 })
 
