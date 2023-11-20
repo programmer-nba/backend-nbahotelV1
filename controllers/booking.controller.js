@@ -1,6 +1,6 @@
 const Booking = require("../models/booking.schema");
 const {Room} = require("../models/room.schema");
-const {Hotel} = require("../models/hotel.schema");
+//const {Hotel} = require("../models/hotel.schema");
 const {Partner} = require("../models/partner.schema");
 const Member = require("../models/member.schema");
 const Payment = require("../models/prepayment.schema");

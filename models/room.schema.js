@@ -2,41 +2,33 @@ const mongoose = require('mongoose')
 
 // Define the schema for the Room entity
 const roomSchema = new mongoose.Schema({
-  hotel_id: { type: mongoose.Schema.Types.ObjectId, ref: 'Hotel', required: true },
-  type: { type: {name_th: {type: String},name_en: {type: String},description: {type: String}}, required: true },
-  quota: {type: Number,default: 0},
-  rating: { type: Number },
-  total_rate: {type: Number},
-  cleaning_rate: { type: Number},
-  total_cleaning_rage: {type: Number},
-  imageURl: {type: [String]},
-  detail: {type: String},
-  price: { type: Number, required: true },
-  cost:{type: Number, required: true},
-  unit: {type: String,required: true}, // unit price (per day or night or hours)
-  // highlight
-  size: { type: Number},
-  bed_type: { type: {name: {type: String},description: {type: String}}, required: true },
-  aircondition: { type: {name: {type: String},description: {type: String}}, required: true },
-  max_person: { type: Number, required: true},
-  children: { type: String, required: true,default:false},
-  view_type: { type: {name: {type: String},description: {type: String}},required: true},
-  bath_type: { type: {name: {type: String},description: {type: String}}, required: true},
-  smoke_type: { type: String, required: true},
-  furniture: { type: Array, required: true},
-  room_service: { type: Array, required: true},
-  amenities: { type: Array, required: true},
-  // entertainment
-  wifi: { type: String, required: true},
-  entertainment: { type: Array },
-  // security
-  security: {type: {name: {type: String},description: {type: String}}, required: true}, // default is false
-  // promotion
-  promotions: { type: Array},
-  // status
-  status: { type: {name: {type: String},description: {type: String}},required: true},
-  checkin_status: {type: String},
-  approved:{type:Boolean,default:false},
+  name:{type:String,required: true},
+  description: {type:String,required:true},
+  phone_number:{type:String,required:true},
+  price: {type:Number,required:true},
+  guests:{type:Number},
+  bedroom:{type:Number},
+  bed:{type:Number},
+  bathroom:{type:Number},
+  latitude: { type: Number},
+  longitude: { type: Number},
+  address: { type: String, required: true },
+  tambon: { type: String, required: true },
+  amphure: { type: String, required: true },
+  province : { type: String, required: true },
+  status:{type:Boolean,default:false},
+  approve : {
+    type: [
+      {
+        statusapprove: { type: String, default: 'รออนุมัติ' },
+        timestamps: { type: Date, default: Date.now }
+      }
+    ],
+    default: [{ statusapprove: 'รออนุมัติ', timestamps: new Date()}]
+  },
+  statusbooking :{type:Boolean,default:false},
+  partner_id:{type: mongoose.Schema.Types.ObjectId,ref:'Partner',required:true},
+  type:{type: mongoose.Schema.Types.ObjectId,ref:'RoomType',required:true},
 })
 
 const Room = mongoose.model('Room', roomSchema)

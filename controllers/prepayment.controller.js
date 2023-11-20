@@ -1,6 +1,6 @@
 const {PrePayment} = require('../models/prepayment.schema');
 const {Booking} = require('../models/booking.schema');
-const {Hotel} = require('../models/hotel.schema');
+
 const {Partner} = require('../models/partner.schema');
 const dayjs = require('dayjs');
 const {uploadFileCreate,deleteFile} = require('../functions/uploadfilecreate');
@@ -53,23 +53,23 @@ module.exports.GetHotelPaymentSlip = async (req,res) => {
 //get Payment by id
 module.exports.GetByid = async (req,res) => {
 
-    const id = req.params.id
-    try {
-        const payments = await PrePayment.find({_id:id}).populate({
-            path: "booking_id",
-            populate: {
-              path: "room_id",
-              populate: {
-                path: "hotel_id",
-              },
-            },
-          })
-        return res.status(200).send(payments);
+    // const id = req.params.id
+    // try {
+    //     const payments = await PrePayment.find({_id:id}).populate({
+    //         path: "booking_id",
+    //         populate: {
+    //           path: "room_id",
+    //           populate: {
+    //             path: "hotel_id",
+    //           },
+    //         },
+    //       })
+    //     return res.status(200).send(payments);
         
-    } catch (error) {
-        console.error(error.message);
-        return res.status(500).send(error.message);
-    }
+    // } catch (error) {
+    //     console.error(error.message);
+    //     return res.status(500).send(error.message);
+    // }
 }
 
 
