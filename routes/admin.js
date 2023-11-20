@@ -69,7 +69,7 @@ router.put('/:id',adminAuth, async (req,res)=>{
             }
         }
 
-        const password = ( req.body.password!= undefined? bcrypt.hashSync(req.body.password, 10):checkofadmin.password)
+        const password = ( req.body.password!= undefined && req.body.password!= ""? bcrypt.hashSync(req.body.password, 10):checkofadmin.password)
         const roles = req.body.roles
         const level = req.body.level
             

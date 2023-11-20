@@ -71,7 +71,6 @@ router.post("/partner", async (req, res) => {
       password: bcrypt.hashSync(req.body.password, 10),
       name: req.body.name,
       idcard:req.body.idcard,
-      image_idcard:req.body.image_idcard,
       address:req.body.address,
       tambon:req.body.tambon,
       amphure:req.body.amphure,

@@ -60,9 +60,4 @@ router.delete('/:id',partnerAuth.onlypartner,Hotel.Delete)
 // //picture management เพิ่ม - ลบ รูปโรงแรม
 router.post('/:id/picture',partnerAuth.verifyTokenpartner,Picture.Create)
 router.delete('/:id/picture/:pictureid',partnerAuth.verifyTokenpartner,Picture.Delete)
-
-
-
-
-
 module.exports = router

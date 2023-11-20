@@ -90,8 +90,9 @@ router.put('/:id',paramsAuth.onlypartner, async(req,res)=>{
         const id = req.params.id
         const checkofpartner = await Partner.findOne({_id:id})
         const telephone = req.body.telephone
-        const password = ( req.body.password!= undefined? bcrypt.hashSync(req.body.password, 10):checkofpartner.password)
+        const password = ( req.body.password!= undefined && req.body.password!= ""? bcrypt.hashSync(req.body.password, 10):checkofpartner.password)
         const name = req.body.name
+        const image_idcard = (req.body.image_idcard!= undefined && req.body.image_idcard!= "" ? req.body.image_idcard:checkofpartner.image_idcard)
         //เช็คเลขซ้ำ
         
         if(!checkofpartner){
@@ -114,14 +115,12 @@ router.put('/:id',paramsAuth.onlypartner, async(req,res)=>{
         }
         const companyname = req.body.companyname
         const level = req.body.level
-        if(!telephone||!password||!name||!companyname||!level){
-            return res.status(400).send({status:false,message:'คุณส่งข้อมูล partner มาไม่ครบ'})
-        }
         const partnerdata = {
             telephone: telephone,
             password :password,
             name : name,
             idcard:req.body.idcard,
+            image_idcard:image_idcard,
             address:req.body.address,
             tambon:req.body.tambon,
             amphure:req.body.amphure,
@@ -157,7 +156,100 @@ router.delete('/:id',adminAuth, async(req,res)=>{
     }
 })
 
+//เพิ่มรูป partner
+const {uploadFileCreate,deleteFile} = require('../functions/uploadfilecreate');
+const multer = require("multer");
+const fs = require("fs");
 
+const storage = multer.diskStorage({
+  filename: function (req, file, cb) {
+    cb(null, Date.now() + "-" + file.originalname);
+     //console.log(file.originalname);
+  },
+});
 
+router.post('/picture/:id',async(req,res)=>{
+    try{
+        const id = req.params.id;
+        const partner = await Partner.findById(id);
+        if(!partner){
+            return res.status(404).send(`partner id ${id} not found`);
+        }
+        let upload = multer({ storage: storage }).array("imgCollection", 20);
+        upload(req, res, async function (err) {
+            const reqFiles = [];
+            const result=[];
+            if (!req.files) {
+                res.status(400).send({ message: "ไม่ได้ส่งภาพมา", status: false });
+            } else {
+                const url = req.protocol + "://" + req.get("host");
+                for (var i = 0; i < req.files.length; i++) {
+                const url =  await uploadFileCreate(req.files, res, { i, reqFiles });
+                result.push(url);
+                //   reqFiles.push(url + "/public/" + req.files[i].filename);
+                }
+                let edit = ""
+                if(result){
+                    const data = partner.image_idcard.concat(reqFiles);
+                    edit = await Partner.findByIdAndUpdate(id,{image_idcard:data},{returnOriginal:false})
+                    res.status(201).send({
+                        message: "สร้างรูปภาพเสร็จเเล้ว",
+                        status: true,
+                        partner:edit,
+                        file: reqFiles,
+                        result:result,
+                    });
+                }else{
+                    return res.status(404).send({message:`อัพเดทข้อมูลล้มเหลว`});
+                }
+            }
+          })
+    }catch(error){
+        return res.status(500).send(error);
+    }
+       
+})
+router.delete('/:id/picture/:image_idcard',async(req,res)=>{
+    const partnerid = req.params.id;
+    const pictureid = req.params.image_idcard;
 
+    try {
+  
+    const partner = await Partner.findById(partnerid);
+  
+    if(!partner){
+        return res.status(404).send(`partner ${partnerid} not found`);
+    }
+    await deleteFile(pictureid);
+    const updatedata = partner.image_idcard.filter(image => image !== pictureid)
+    const edit = await Partner.findByIdAndUpdate(partnerid,{image_idcard:updatedata},{returnOriginal:false})
+    return res.status(200).send({message:"ลบภาพสำเร็จแล้ว",partner:edit})
+  
+    } catch (error) {
+      return res.status(500).send(error);
+    }
+})
+
+//เปิด-ปิด ให้ห้องสามารถจองได้
+// router.put('/statusbooking/:id',async(req,res)=>{
+//     const id = req.params.id
+//     const partner = Partner.findById(id)
+//     if(!partner)
+//     {
+//         return res.status(404).send(`partner ${id} not found`);
+//     }
+//     const edit = await Partner.findByIdAndUpdate(id,{statusbooking:true},{returnOriginal:false})
+//     return res.status(200).send({message:" เปิดให้ห้องสามารถจองได้แล้ว",partner:edit})
+// })
+
+// router.put('/unstatusbooking/:id',async(req,res)=>{
+//     const id = req.params.id
+//        const partner = Partner.findById(id)
+//     if(!partner)
+//     {
+//         return res.status(404).send(`partner ${id} not found`);
+//     }
+//     const edit = await Partner.findByIdAndUpdate(id,{statusbooking:false},{returnOriginal:false})
+//     return res.status(200).send({message:"ปิดให้ห้องสามารถจองได้แล้ว",partner:edit})
+// })
 module.exports = router;

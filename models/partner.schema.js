@@ -6,7 +6,7 @@ const partnerSchema = new mongoose.Schema({
   password:{type: String , required:true},
   name: {type: String,required:true,unique:true},
   idcard:{type:String,require:true},
-  image_idcard:{ type: String},
+  image_idcard:{ type: [String]},
   address: { type: String, required: true },
   tambon: { type: String, required: true },
   amphure: { type: String, required: true },
