@@ -29,6 +29,7 @@ const roomSchema = new mongoose.Schema({
   statusbooking :{type:Boolean,default:false},
   partner_id:{type: mongoose.Schema.Types.ObjectId,ref:'Partner',required:true},
   type:{type: mongoose.Schema.Types.ObjectId,ref:'RoomType',required:true},
+  image:{ type: [String]},
 })
 
 const Room = mongoose.model('Room', roomSchema)

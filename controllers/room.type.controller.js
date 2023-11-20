@@ -14,10 +14,8 @@ module.exports.GetAll = async (req,res) =>{
 //ceate Catetory
 module.exports.Create= async (req,res) =>{
     try {
-        
         const data = {
-            name_th: req.body.name_th,
-            name_en: req.body.name_en,
+            name: req.body.name,
             description : req.body.description
         }
         const roomType = new RoomType(data);
@@ -35,8 +33,7 @@ module.exports.Update = async (req,res) => {
     const id = req.params.id;
     try {
         const data = {
-            name_th: req.body.name_th,
-            name_en: req.body.name_en,
+            name: req.body.name,
             description : req.body.description
         }
         const edit = await RoomType.findOneAndUpdate({_id:id},data,{returnOriginal:false})

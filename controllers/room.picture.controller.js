@@ -42,8 +42,8 @@ module.exports.Create = async (req, res) => {
 
         let edit = ""
         if(result){
-          const data = room.imageURl.concat(reqFiles);
-          edit = await Room.findByIdAndUpdate(id,{imageURl:data},{returnOriginal:false})
+          const data = room.image.concat(reqFiles);
+          edit = await Room.findByIdAndUpdate(id,{image:data},{returnOriginal:false})
         }
 
         res.status(201).send({
@@ -56,7 +56,7 @@ module.exports.Create = async (req, res) => {
       }
     });
   } catch (error) {
-    res.status(500).send({ message: "มีบางอย่างผิดพลาด", status: false });
+    return res.status(500).send({ message: error.message, status: false });
   }
 };
 
@@ -75,11 +75,11 @@ module.exports.Delete = async (req,res) =>{
     }
 
     await deleteFile(pictureid);
-    const updatedata = room.imageURl.filter(image => image !== pictureid);
-    const deleteimages= await Room.findByIdAndUpdate(roomid,{imageURl:updatedata},{returnOriginal:false})
-    return res.status(200).send(deleteimages.imageURl);
+    const updatedata = room.image.filter(image => image !== pictureid);
+    const deleteimages= await Room.findByIdAndUpdate(roomid,{image:updatedata},{returnOriginal:false})
+    return res.status(200).send({message:true,data:deleteimages.image});
   } catch (error) {
-    return res.status(500).send(error);
+    return res.status(500).send({ message: error.message, status: false });
   }
   
 }
