@@ -30,4 +30,11 @@ router.delete('/:id',partnerAuth.onlypartner,Room.Delete)
 router.post('/picture/:id',partnerAuth.onlypartner,picture.Create)
 router.delete('/picture/:id/:pictureid',partnerAuth.onlypartner,picture.Delete)
 
+// admin อนุมัติห้อง
+router.put('/approve/:id')
+router.put('/unapprove/:id')
+
+// partner เปิด-ปิด ห้องทั้งหมด
+router.put('/openstatus/')
+router.put('/closestatus/')
 module.exports = router;

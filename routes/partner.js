@@ -230,7 +230,7 @@ router.delete('/:id/picture/:image_idcard',async(req,res)=>{
     }
 })
 
-//เปิด-ปิด ให้ห้องสามารถจองได้
+//เปิด-ปิด การทำรายการไอดี partner ได้
 router.put('/statusbooking/:id',adminAuth,async(req,res)=>{
     const id = req.params.id
     const partner = Partner.findById(id)
@@ -239,7 +239,7 @@ router.put('/statusbooking/:id',adminAuth,async(req,res)=>{
         return res.status(404).send(`partner ${id} not found`);
     }
     const edit = await Partner.findByIdAndUpdate(id,{statusbooking:true},{returnOriginal:false})
-    return res.status(200).send({message:" เปิดให้ห้องสามารถจองได้แล้ว",partner:edit})
+    return res.status(200).send({message:`เปิดได้ไอดีpartner ${id} `,partner:edit})
 })
 
 router.put('/unstatusbooking/:id',adminAuth,async(req,res)=>{
@@ -250,6 +250,9 @@ router.put('/unstatusbooking/:id',adminAuth,async(req,res)=>{
         return res.status(404).send(`partner ${id} not found`);
     }
     const edit = await Partner.findByIdAndUpdate(id,{statusbooking:false},{returnOriginal:false})
-    return res.status(200).send({message:"ปิดให้ห้องสามารถจองได้แล้ว",partner:edit})
+    return res.status(200).send({message:`ปิดได้ไอดีpartner ${id} `,partner:edit})
 })
+
+
+
 module.exports = router;
