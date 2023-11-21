@@ -28,7 +28,7 @@ router.delete('/:id',partnerAuth.onlypartner,Room.Delete)
 
 //picture management routes  
 router.post('/picture/:id',partnerAuth.onlypartner,picture.Create)
-router.delete('/picture/:id/:pictureid',partnerAuth.onlypartner,picture.Delete)
+router.delete('/picture/:id/:pictureid',partnerAuth.verifyTokenpartner,picture.Delete)
 
 // admin อนุมัติห้อง
 router.put('/approve/:id',adminAuth,Room_status.approve)
