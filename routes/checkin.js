@@ -21,7 +21,7 @@ router.put('/checkin/:id',memberAuth.verifyTokenmember, async (req,res)=>{
         {
             add = await Checkin_out.findByIdAndUpdate({_id:check_indata._id},{check_in_date:new Date()},{new:true})
             
-        }else{
+                              }else{
             //ถ้ามี booking_id  ยังไม่มี checkin 
             const checkin = new Checkin_out({
             booking_id:booking_id,

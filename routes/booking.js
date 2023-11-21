@@ -10,12 +10,13 @@ const memberAuth = require('../authentication/memberauth')
 router.post('/',memberAuth.verifyTokenmember,Booking.addbooking)
 //เรียกข้อมูลการจอง
 router.get('/',memberAuth.all,Booking.GetAll)
+
 //เรียกข้อมูลการจอง ตาม id
 router.get('/:id',memberAuth.all,Booking.GetByid)
-//เรียกข้อมูลการจองตาม hotel_id
-router.get('/hotel/:id',memberAuth.all,Booking.GetByhotel)
+
 //เรียกข้อมูลการจองตาม room_id
 router.get('/room/:id',memberAuth.all,Booking.GetByroom)
+
 //เรียกข้อมูลการจอง ตาม member id
 router.get('/member/:id',memberAuth.all,Booking.GetBymember)
 

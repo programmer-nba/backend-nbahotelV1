@@ -90,39 +90,11 @@ module.exports.GetByid = async (req, res) => {
   }
 };
 
-//เรียกข้อมูลการจองตาม hotel_id
-module.exports.GetByhotel = async (req, res) => {
-  try {
-    const hotel_id = req.params.id;
-    const booking = await Booking.findOne({hotel_id: hotel_id})
-    .populate("member_id")
-    .populate({
-      path: "room_id",
-      populate: {
-        path: "hotel_id",
-      },
-    });
-
-    if (!booking) {
-      return res.status(404).send("หาข้อมูล โรงแรมไม่เจอ ");
-    }
-    return res.status(200).send(booking);
-  } catch (error) {
-    return res.status(500).send({status:false,error:error.message});
-  }
-};
 //เรียกข้อมูลการจองตาม room_id
 module.exports.GetByroom = async (req, res) => {
   try {
     const room_id = req.params.id;
-    const booking = await Booking.findOne({room_id: room_id})
-      .populate("member_id")
-      .populate({
-        path: "room_id",
-        populate: {
-          path: "hotel_id",
-        },
-      });
+    const booking = await Booking.findOne({room_id: room_id}).populate("member_id").populate("room_id");
     if (!booking) {
       return res.status(404).send("หาข้อมูล booking ไม่เจอ");
     }
@@ -135,9 +107,7 @@ module.exports.GetByroom = async (req, res) => {
 module.exports.GetBymember = async (req, res) => {
   try {
     const member_id = req.params.id;
-    const booking = await Booking.findOne({member_id: member_id})
-      .populate("member_id")
-      .populate("room_id");
+    const booking = await Booking.findOne({member_id: member_id}).populate("member_id").populate("room_id");
     if (!booking) {
       return res.status(404).send("หาข้อมูล booking ไม่เจอ");
     }
@@ -192,14 +162,8 @@ module.exports.unacceptbooking = async (req, res) => {
     {_id: id},
     {$push: {status: newStatus}},
     {new: true}
-  )
-    .populate("member_id")
-    .populate({
-      path: "room_id",
-      populate: {
-        path: "hotel_id",
-      },
-    });
+  ).populate("member_id").populate("room_id");
+
   if (!edit) {
     return res
       .status(404)
@@ -275,7 +239,8 @@ module.exports.Payment = async (req, res) => {
 
 // partner ยืนยันชำระเงิน
 module.exports.confirmbookingpayment = async (req, res) => {
-  const payment_id = req.params.id; // payment_id
+  try{
+    const payment_id = req.params.id; // payment_id
   //เพิ่มสถานะ
   const newStatus = {
     statusbooking: "จองห้องสำเร็จ",
@@ -297,14 +262,7 @@ module.exports.confirmbookingpayment = async (req, res) => {
     {_id: editpayment.booking_id},
     {$push: {status: newStatus}},
     {new: true}
-  )
-    .populate("member_id")
-    .populate({
-      path: "room_id",
-      populate: {
-        path: "hotel_id",
-      },
-    });
+  ).populate("member_id").populate("room_id");
   if (!editbooking) {
     return res
       .status(404)
@@ -317,6 +275,10 @@ module.exports.confirmbookingpayment = async (req, res) => {
     booking: editbooking,
     payment: editpayment,
   });
+  }catch(error){
+    return res.status(500).send({status:false,error:error.message});
+  }
+  
 };
 
 // partner ไม่ยืนยันการชำระเงิน
