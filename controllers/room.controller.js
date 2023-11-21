@@ -89,7 +89,7 @@ module.exports.Create = async (req, res) => {
         }
         const room = new Room(data);
         const add = await room.save()
-        return res.status(200).send(add)
+        return res.status(200).send({status:true,message:"เพิ่มข้อมูลห้องสำเร็จ",data:add})
     } catch (error) {
         return res.status(500).send({ message: error.message, status: false });
 
@@ -129,7 +129,7 @@ module.exports.Update = async (req, res) => {
             province:req.body.province,           
         }
         const edit = await Room.findByIdAndUpdate(id,data,{ returnOriginal: false })
-        return res.status(200).send(edit)
+        return res.status(200).send({status:true,message:"แก้ไขข้อมูลห้องสำเร็จ",data:edit})
     } catch (error) {
         return res.status(500).send({ message: error.message, status: false });
     }
