@@ -12,6 +12,7 @@ const bcrypt = require("bcryptjs")
 //เรียกใช้ function เช็คชื่อและเบอร์โทรศัพท์
 const checkalluser = require("../functions/check-alluser")
 
+const jwt = require("jsonwebtoken");
 
 
 //เรียกข้อมูลทั้งหมด
@@ -253,6 +254,19 @@ router.put('/unstatusbooking/:id',adminAuth,async(req,res)=>{
     return res.status(200).send({message:`ปิดได้ไอดีpartner ${id} `,partner:edit})
 })
 
+router.post('/findpartner/',paramsAuth.onlypartner, async (req,res)=>{
+    try{
+        let token = req.headers["token"]
+        const secretKey = "i#ngikanei;#aooldkhfa'"
+        const decoded =  jwt.verify(token,secretKey)
+        // ทำการดึงข้อมูลadmin
+        const partner = await Partner.findOne({name:decoded.name})
+        return res.status(200).send({status:true,data:partner})
+    }
+    catch(error){
+        return res.status(500).send({status:false,error:error.message});
+    }
+})
 
 
 module.exports = router;

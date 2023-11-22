@@ -6,8 +6,10 @@ const Partner = require('../models/partner.schema')
 const Member = require('../models/member.schema')
 const bcrypt = require("bcryptjs")
 //เรียกใช้ function เช็คชื่อและเบอร์โทรศัพท์
-const checkalluser = require("../functions/check-alluser")
+const checkalluser = require("../functions/check-alluser");
+const { admin } = require('googleapis/build/src/apis/admin');
 
+const jwt = require("jsonwebtoken");
 /* GET users listing. */
 // เรียกดูข้อมูลทั้งหมดเฉพาะ admin
 router.get('/',adminAuth, async(req,res)=>{
@@ -112,5 +114,18 @@ router.delete('/:id',adminAuth, async(req,res)=>{
     }
 })
 
+router.post('/findadmin/',adminAuth, async (req,res)=>{
+    try{
+        let token = req.headers["token"]
+        const secretKey = "i#ngikanei;#aooldkhfa'"
+        const decoded =  jwt.verify(token,secretKey)
+        // ทำการดึงข้อมูลadmin
+        const admin = await Admin.findOne({name:decoded.name})
+        return res.status(200).send({status:true,data:admin})
+    }
+    catch(error){
+        return res.status(500).send({status:false,error:error.message});
+    }
+})
 
 module.exports = router;

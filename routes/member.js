@@ -9,6 +9,7 @@ const adminAuth = require('../authentication/adminAuth')
 const bcrypt = require("bcryptjs")
 //เรียกใช้ function เช็คชื่อและเบอร์โทรศัพท์
 const checkalluser = require("../functions/check-alluser")
+const jwt = require("jsonwebtoken");
 /* GET users listing. */
 // เรียกดูข้อมูลทั้งหมดเฉพาะ admin
 router.get('/',adminAuth, async(req,res)=>{
@@ -122,6 +123,19 @@ router.put('/:id',memberAuth.verifyTokenmember, async (req,res)=>{
     }
  })
 
+ router.post('/findmember/',memberAuth.verifyTokenmember, async (req,res)=>{
+    try{
+        let token = req.headers["token"]
+        const secretKey = "i#ngikanei;#aooldkhfa'"
+        const decoded =  jwt.verify(token,secretKey)
+        // ทำการดึงข้อมูลadmin
+        const member = await Member.findOne({name:decoded.name})
+        return res.status(200).send({status:true,data:member})
+    }
+    catch(error){
+        return res.status(500).send({status:false,error:error.message});
+    }
+})
 
 
 // router.get('/:id',MemberAuth, User.getById);

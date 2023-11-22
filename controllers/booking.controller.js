@@ -131,12 +131,7 @@ module.exports.AcceptBooking = async (req, res) => {
       {new: true}
     )
       .populate("member_id")
-      .populate({
-        path: "room_id",
-        populate: {
-          path: "hotel_id",
-        },
-      });
+      .populate("room_id");
     if (!edit) {
       return res
         .status(404)
