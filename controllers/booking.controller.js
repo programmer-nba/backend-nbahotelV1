@@ -52,7 +52,7 @@ module.exports.addbooking = async (req, res) => {
       price: price,
     });
     const add = await booking.save();
-    res.status(200).send(add);
+    res.status(200).send({status:true,message:"จองห้องพักแล้วกรุณารอการอนุมัติห้อง",data:add});
   } catch (error) {
     return res.status(500).send({status:false,error:error.message});
   }
