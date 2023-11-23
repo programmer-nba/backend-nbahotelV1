@@ -1,7 +1,7 @@
 const Booking = require("../models/booking.schema");
 const {Room} = require("../models/room.schema");
 //const {Hotel} = require("../models/hotel.schema");
-const {Partner} = require("../models/partner.schema");
+const Partner = require("../models/partner.schema");
 const Member = require("../models/member.schema");
 const Payment = require("../models/prepayment.schema");
 
@@ -12,6 +12,7 @@ const addgoogledrive = require("../functions/uploadfilecreate");
 //ดึงข้อมูล ใน form-data ได้
 const fs = require("fs");
 const multer = require("multer");
+const { path } = require("express/lib/application");
 const storage = multer.diskStorage({
   filename: function (req, file, cb) {
     cb(null, Date.now() + "-" + file.originalname);
@@ -63,12 +64,7 @@ module.exports.GetAll = async (req, res) => {
   try {
     const booking = await Booking.find()
       .populate("member_id")
-      .populate({
-        path: "room_id",
-        populate: {
-          path: "hotel_id",
-        },
-      });
+      .populate("room_id");
     return res.status(200).send(booking);
   } catch (error) {
     return res.status(500).send({message: error.message});
@@ -122,6 +118,26 @@ module.exports.GetBymember = async (req, res) => {
   }
 };
 
+//เรียกข้อมูลการจองตาม partner
+module.exports.GetBypartner = async (req, res) => {
+  try {
+    let token = req.headers["token"]
+    const secretKey = "i#ngikanei;#aooldkhfa'"
+    const decoded =  jwt.verify(token,secretKey)
+   
+    const partner = await Partner.findOne({name:decoded.name})
+  
+    const booking = await Booking.findOne({ partner_id: partner._id }).populate({ path: "room_id", populate: { path: "partner_id" } })
+  .populate("member_id")
+  
+    if (!booking) {
+      return res.status(404).send("หาข้อมูล booking ไม่เจอ");
+    }
+    return res.status(200).send(booking);
+  } catch (error) {
+    return res.status(500).send({status:false,error:error.message});
+  }
+};
 //partner อนุมัติการจองห้อง
 module.exports.AcceptBooking = async (req, res) => {
   try {

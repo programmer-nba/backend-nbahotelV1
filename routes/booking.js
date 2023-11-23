@@ -19,6 +19,8 @@ router.get('/room/:id',memberAuth.all,Booking.GetByroom)
 
 //เรียกข้อมูลการจอง ตาม member id
 router.get('/member/:id',memberAuth.all,Booking.GetBymember)
+//เรีัยกข้อมูลตาม partner 
+router.post('/partner/',memberAuth.all,Booking.GetBypartner)
 
 //อนุมัติการจองห้อง
 router.put('/AcceptBooking/:id',partnerAuth.onlypartner,Booking.AcceptBooking)
