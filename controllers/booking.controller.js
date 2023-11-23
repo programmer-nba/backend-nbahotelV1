@@ -21,7 +21,12 @@ const storage = multer.diskStorage({
 //สร้างข้อมูลการจอง
 module.exports.addbooking = async (req, res) => {
   try {
-    const member_id = req.body.member_id;
+    let token = req.headers["token"]
+    const secretKey = "i#ngikanei;#aooldkhfa'"
+    const decoded =  jwt.verify(token,secretKey)
+    // ทำการดึงข้อมูลadmin
+    const members = await Member.findOne({name:decoded.name})
+    const member_id = members._id
     const room_id = req.body.room_id;
     const date_from = req.body.date_from;
     const date_to = req.body.date_to;
