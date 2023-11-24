@@ -12,14 +12,15 @@ router.post('/',memberAuth.verifyTokenmember,Booking.addbooking)
 router.get('/',memberAuth.all,Booking.GetAll)
 //เรีัยกข้อมูลตาม partner 
 router.get('/partner/',memberAuth.all,Booking.GetBypartner)
+//เรียกข้อมูลการจอง ตาม member id
+router.get('/member/',memberAuth.all,Booking.GetBymember)
 //เรียกข้อมูลการจอง ตาม id
 router.get('/:id',memberAuth.all,Booking.GetByid)
 
 //เรียกข้อมูลการจองตาม room_id
 router.get('/room/:id',memberAuth.all,Booking.GetByroom)
 
-//เรียกข้อมูลการจอง ตาม member id
-router.get('/member/:id',memberAuth.all,Booking.GetBymember)
+
 
 
 //อนุมัติการจองห้อง

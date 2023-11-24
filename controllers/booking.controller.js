@@ -108,12 +108,16 @@ module.exports.GetByroom = async (req, res) => {
 //เรียกข้อมูลการจองตาม member
 module.exports.GetBymember = async (req, res) => {
   try {
-    const member_id = req.params.id;
-    const booking = await Booking.findOne({member_id: member_id}).populate("member_id").populate("room_id");
+    let token = req.headers["token"]
+    const secretKey = "i#ngikanei;#aooldkhfa'"
+    const decoded =  jwt.verify(token,secretKey)
+    const member = await Member.findOne({name:decoded.name})
+    const member_id = member._id;
+    const booking = await Booking.find({member_id: member_id}).populate("member_id").populate("room_id");
     if (!booking) {
       return res.status(404).send("หาข้อมูล booking ไม่เจอ");
     }
-    return res.status(200).send(booking);
+    return res.status(200).send({status:true,data:booking});
   } catch (error) {
     return res.status(500).send({status:false,error:error.message});
   }
