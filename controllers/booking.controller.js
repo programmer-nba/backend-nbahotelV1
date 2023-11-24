@@ -253,7 +253,7 @@ module.exports.Payment = async (req, res) => {
     if(!editpaymentid){
         return res.status(404).send({status:false,message:"id ที่ส่งมาไม่มีในข้อมูล Booking"})
     }
-    return res.status(200).send({status:true,message:`ข้อมูล ${editpaymentid.id} ได้ส่งหลักฐานการชำระเงินเรียบร้อย แล้วรอยืนยันการชำระเงิน`,update:editpaymentid,payment:addpayment,file:reqFiles})
+    return res.status(200).send({status:true,message:`คุณได้ส่งหลักฐานการชำระเงินเรียบร้อย แล้วรอยืนยันการชำระเงิน`,update:editpaymentid,payment:addpayment,file:reqFiles})
     })
 
    
