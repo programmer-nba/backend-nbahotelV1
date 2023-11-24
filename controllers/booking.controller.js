@@ -75,13 +75,14 @@ module.exports.GetByid = async (req, res) => {
   try {
     const id = req.params.id;
     const booking = await Booking.findOne({_id: id})
-      .populate("member_id")
-      .populate({
-        path: "room_id",
-        populate: {
-          path: "hotel_id",
-        },
-      });
+    .populate({ path: "member_id" })
+    .populate({ 
+      path: "room_id", 
+      populate: [
+        { path: "partner_id" },
+        { path: "type" } 
+      ]
+    });;
     if (!booking) {
       return res.status(404).send("หาข้อมูล booking ไม่เจอ");
     }
