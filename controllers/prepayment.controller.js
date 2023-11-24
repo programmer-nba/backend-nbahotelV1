@@ -28,21 +28,19 @@ module.exports.GetAll = async (req,res) =>{
     }
 }
 
-//get Payment by hotel id
-module.exports.GetHotelPaymentSlip = async (req,res) => {
+//get Payment by booking
+module.exports.GetBooking = async (req,res) => {
 
     const id = req.params.id
     try {
-        const payments = await PrePayment.find({hotel_id:id}).populate({
+        const payments = await PrePayment.find({
+          booking_id:id}).populate({
             path: "booking_id",
             populate: {
-              path: "room_id",
-              populate: {
-                path: "hotel_id",
-              },
+              path: "room_id"
             },
           })
-        return res.status(200).send(payments);
+        return res.status(200).send({status:true,data:payments});
         
     } catch (error) {
       return res.status(500).send({status:false,error:error.message});

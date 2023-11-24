@@ -6,7 +6,7 @@ var partnerAuth = require('../authentication/partnerAuth')
 
 router.get('/',Payment.GetAll)
 router.get('/:id',Payment.GetByid)
-router.get('/hotel/:id',Payment.GetHotelPaymentSlip)
+router.get('/booking/:id',Payment.GetBooking)
 
 // router.get('/:id/:payment_number',Payment.GetHotelPaymentSlipByPaymentNumber);
 // router.post('/',Payment.CreatePrepayment);

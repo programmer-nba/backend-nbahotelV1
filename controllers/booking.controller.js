@@ -149,6 +149,35 @@ module.exports.GetBypartner = async (req, res) => {
     return res.status(500).send({status:false,error:error.message});
   }
 };
+//เรียกข้อมูลการจองตาม partner และ เรียกข้อมูล payment มาด้วย
+module.exports.GetBypartnerandpayment = async (req, res) => {
+  try {
+    let token = req.headers["token"]
+    const secretKey = "i#ngikanei;#aooldkhfa'"
+    const decoded =  jwt.verify(token,secretKey)
+    const partner = await Partner.findOne({name:decoded.name})
+    const room = await Room.find({partner_id:partner._id}) 
+    const room_id = room.map(room=>room._id)
+    const booking = await Booking.find({ room_id: { $in: room_id } }) .populate({ path: "member_id" })
+    .populate({ 
+      path: "room_id", 
+      populate: [
+        { path: "partner_id" },
+        { path: "type" } 
+      ]
+    });
+  
+    if (!booking) {
+      return res.status(404).send("หาข้อมูล booking ไม่เจอ");
+    }
+    const book_id = booking.map(booking=>booking._id)
+    const payment = await Payment.PrePayment.find({booking_id:{$in:book_id}})
+
+    return res.status(200).send({status:true,data:booking,payment:payment});
+  } catch (error) {
+    return res.status(500).send({status:false,error:error.message});
+  }
+};
 //partner อนุมัติการจองห้อง
 module.exports.AcceptBooking = async (req, res) => {
   try {
