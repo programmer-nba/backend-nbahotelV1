@@ -139,7 +139,7 @@ module.exports.GetBypartner = async (req, res) => {
     if (!booking) {
       return res.status(404).send("หาข้อมูล booking ไม่เจอ");
     }
-    return res.status(200).send(booking);
+    return res.status(200).send({status:true,data:booking});
   } catch (error) {
     return res.status(500).send({status:false,error:error.message});
   }
