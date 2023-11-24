@@ -15,7 +15,7 @@ const bookingSchema = new mongoose.Schema({
         timestamps: { type: Date }
       }
     ],
-   default: [{ statusapprove: 'รออนุมัติห้อง', timestamps: new Date()}]
+   default: [{ statusbooking: 'รออนุมัติห้อง', timestamps: new Date()}]
  }
   },
   {timestamps:true}
