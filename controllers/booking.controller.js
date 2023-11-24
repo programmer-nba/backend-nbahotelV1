@@ -124,11 +124,17 @@ module.exports.GetBypartner = async (req, res) => {
     let token = req.headers["token"]
     const secretKey = "i#ngikanei;#aooldkhfa'"
     const decoded =  jwt.verify(token,secretKey)
-   
     const partner = await Partner.findOne({name:decoded.name})
-  
-    const booking = await Booking.findOne({ partner_id: partner._id }).populate({ path: "room_id", populate: { path: "partner_id" } })
-  .populate("member_id")
+    const room = await Room.find({partner_id:partner._id}) 
+    const room_id = room.map(room=>room._id)
+    const booking = await Booking.find({ room_id: { $in: room_id } }) .populate({ path: "member_id" })
+    .populate({ 
+      path: "room_id", 
+      populate: [
+        { path: "partner_id" },
+        { path: "type" } 
+      ]
+    });
   
     if (!booking) {
       return res.status(404).send("หาข้อมูล booking ไม่เจอ");
