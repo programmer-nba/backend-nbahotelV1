@@ -63,10 +63,15 @@ module.exports.addbooking = async (req, res) => {
 //เรียกข้อมูลทั้งหมด
 module.exports.GetAll = async (req, res) => {
   try {
-    const booking = await Booking.find()
-      .populate("member_id")
-      .populate("room_id");
-    return res.status(200).send(booking);
+    const booking = await Booking.find().populate({ path: "member_id" })
+    .populate({ 
+      path: "room_id", 
+      populate: [
+        { path: "partner_id" },
+        { path: "type" } 
+      ]
+    });
+    return res.status(200).send({status:true,data:booking});
   } catch (error) {
     return res.status(500).send({message: error.message});
   }
