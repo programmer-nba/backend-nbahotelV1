@@ -4,35 +4,51 @@ const partnerAuth = require('../authentication/partnerAuth')
 const memberAuth = require("../authentication/memberauth")
 const Checkin_out = require("../models/checkin_out.schema")
 const Booking = require("../models/booking.schema")
+const jwt = require("jsonwebtoken");
+const Partner = require('../models/partner.schema')
+const {Room} = require('../models/room.schema')
+const Member = require('../models/member.schema')
 
-
+router.get('/member/',memberAuth.memberandpartner, async(req,res)=>{
+    try {
+        let token = req.headers["token"]
+        const secretKey = "i#ngikanei;#aooldkhfa'"
+        const decoded =  jwt.verify(token,secretKey)
+        const member = await Member.findOne({name:decoded.name})
+        //หาจอง
+        const booking = await Booking.find({ member_id: member._id })
+        //หาbooking_id
+        const booking_id= booking.map(booking=>booking._id)
+        const check_in = await Checkin_out.find({booking_id:booking_id}).populate(
+        {
+            path:"booking_id",
+            populate: [
+                { path:"member_id"},
+                { 
+                    path: "room_id",
+                    populate: [
+                        { path: "partner_id" },
+                        { path: "type" } 
+                      ],
+                } 
+              ]
+        })
+        if(!check_in){
+            return res.status(404).send({status:false,message:'หาข้อมูลbookingไม่เจอ'})
+        }
+        return res.status(200).send({status:true,data:check_in});
+      } catch (error) {
+        return res.status(500).send({status:false,error:error.message});
+      }
+})
 // เช็คอิน
 router.put('/checkin/:id',memberAuth.verifyTokenmember, async (req,res)=>{
     try{
-        const booking_id = req.params.id
-        const bookingdata = await Booking.findOne({_id:booking_id})
-        if(!bookingdata){
-            return res.status(404).send({message:'หาข้อมูล booking ไม่เจอ'})
-        }
-        //แต่ถ้ามี ให้ทับอันเก้า
-        const check_indata = await Checkin_out.findOne({booking_id:booking_id})
-        let add = ""
-        if(check_indata)
-        {
-            add = await Checkin_out.findByIdAndUpdate({_id:check_indata._id},{check_in_date:new Date()},{new:true})
-            
-                              }else{
-            //ถ้ามี booking_id  ยังไม่มี checkin 
-            const checkin = new Checkin_out({
-            booking_id:booking_id,
-            check_in_date: new Date(),
-            check_out_date:''
-        })
-            add = await checkin.save()
-        }
-
-        if(add){
-            return res.status(200).send({status:true,message:'คุณได้เช็คอินแล้ว',check_in_out:add})
+        const checkin_id = req.params.id
+        
+        const edit = await Checkin_out.findByIdAndUpdate({_id:checkin_id},{check_in_date:new Date()},{new:true})
+        if(edit){
+            return res.status(200).send({status:true,message:'คุณได้เช็คอินแล้ว',check_in_out:edit})
         }        
     } catch (error) {
         return res.status(500).send({status:false,error:error.message});
@@ -42,12 +58,9 @@ router.put('/checkin/:id',memberAuth.verifyTokenmember, async (req,res)=>{
 //เช็คเอาท์
 router.put('/checkout/:id',memberAuth.verifyTokenmember, async (req,res)=>{
     try{
-        const booking_id = req.params.id
-        const bookingdata = await Booking.findOne({_id:booking_id})
-        if(!bookingdata){
-            return res.status(404).send({message:'หาข้อมูล booking ไม่เจอ'})
-        }
-        const update = await Checkin_out.findOneAndUpdate({booking_id:booking_id},{check_out_date: new Date()},{new:true})
+        const checkout_id = req.params.id
+       
+        const update = await Checkin_out.findOneAndUpdate({_id:checkout_id},{check_out_date: new Date()},{new:true})
         if(update){
             return res.status(200).send({status:true,message:'คุณได้เช็คเอาท์แล้ว',check_in_out:update})
         }        
@@ -65,6 +78,8 @@ router.get('/',memberAuth.memberandpartner, async(req,res)=>{
         return res.status(500).send({status:false,error:error.message});
       }
 })
+//เรียกข้อมูลตาม partner
+
 
 //เรียกตามไอดี
 router.get('/:id',memberAuth.memberandpartner, async(req,res)=>{

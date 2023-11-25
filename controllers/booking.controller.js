@@ -7,6 +7,7 @@ const Payment = require("../models/prepayment.schema");
 
 const dayjs = require("dayjs");
 const jwt = require("jsonwebtoken");
+const Checkin_out = require("../models/checkin_out.schema")
 // เรียกใช้ฟังกชั่น
 const addgoogledrive = require("../functions/uploadfilecreate");
 //ดึงข้อมูล ใน form-data ได้
@@ -319,17 +320,25 @@ module.exports.confirmbookingpayment = async (req, res) => {
     {$push: {status: newStatus}},
     {new: true}
   ).populate("member_id").populate("room_id");
+
   if (!editbooking) {
     return res
       .status(404)
       .send({status: false, message: "id ที่ส่งมาไม่มีในข้อมูล Booking"});
   }
+  const checkin = new Checkin_out({
+    booking_id:editpayment.booking_id,
+    check_in_date: '',
+    check_out_date:''
+  })
+  const add = await checkin.save()
 
   return res.status(200).send({
     status: true,
     message: `ข้อมูล ${editbooking._id} ได้รับการยืนยันการชำระเงินแล้ว จองห้องพักสำเร็จ`,
     booking: editbooking,
     payment: editpayment,
+    checkin:add
   });
   }catch(error){
     return res.status(500).send({status:false,error:error.message});
