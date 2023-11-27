@@ -46,16 +46,20 @@ module.exports.addbooking = async (req, res) => {
     if (!room) {
       res.status(400).send({message: "หาข้อมูล room ไม่เจอ"});
     }
-
+    const newStatus = {
+        statusbooking: "รอชำระเงิน",
+        timestamps: new Date(),
+    };
     const booking = new Booking({
       member_id: member_id,
       room_id: room_id,
       date_from: date_from,
       date_to: date_to,
-      price: price
+      price: price,
+      status:newStatus
     });
     const add = await booking.save();
-    res.status(200).send({status:true,message:"จองห้องพักแล้วกรุณารอการอนุมัติห้อง",data:add});
+    res.status(200).send({status:true,message:"จองห้องพักแล้วกรุณารอการชำระเงิน",data:add});
   } catch (error) {
     return res.status(500).send({status:false,error:error.message});
   }
@@ -184,59 +188,6 @@ module.exports.GetBypartnerandpayment = async (req, res) => {
   } catch (error) {
     return res.status(500).send({status:false,error:error.message});
   }
-};
-//partner อนุมัติการจองห้อง
-module.exports.AcceptBooking = async (req, res) => {
-  try {
-    const id = req.params.id;
-    const newStatus = {
-      statusbooking: "รอชำระเงิน",
-      timestamps: new Date(),
-    };
-    const edit = await Booking.findByIdAndUpdate(
-      {_id: id},
-      {$push: {status: newStatus}},
-      {new: true}
-    )
-      .populate("member_id")
-      .populate("room_id");
-    if (!edit) {
-      return res
-        .status(404)
-        .send({status: false, message: "id ที่ส่งมาไม่มีในข้อมูล Booking"});
-    }
-    return res.status(200).send({
-      status: true,
-      message: `ข้อมูล ${edit.id} ได้รับการอนุมัติแล้ว รอการชำระเงิน`,
-      update: edit,
-    });
-  } catch (error) {
-    return res.status(500).send({status:false,error:error.message});
-  }
-};
-//  partner ไม่อนุมัติห้อง
-module.exports.unacceptbooking = async (req, res) => {
-  const id = req.params.id;
-  const newStatus = {
-    statusbooking: "ไม่อนุมัติห้อง",
-    timestamps: new Date(),
-  };
-  const edit = await Booking.findByIdAndUpdate(
-    {_id: id},
-    {$push: {status: newStatus}},
-    {new: true}
-  ).populate("member_id").populate("room_id");
-
-  if (!edit) {
-    return res
-      .status(404)
-      .send({status: false, message: "id ที่ส่งมาไม่มีในข้อมูล Booking"});
-  }
-  return res.status(200).send({
-    status: true,
-    message: `ข้อมูล ${edit.id} ไม่ได้รับการอนุมัติ กรุณาเลือกจองหัองพักใหม่`,
-    update: edit,
-  });
 };
 
 //member ชำระเงิน
