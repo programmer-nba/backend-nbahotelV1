@@ -28,6 +28,22 @@ router.get('/',adminAuth, async(req,res)=>{
     }
 })
 
+//ค้นหา partner ตาม token
+router.get('/findpartner/',paramsAuth.onlypartner, async (req,res)=>{
+    try{
+        let token = req.headers["token"]
+        const secretKey = "i#ngikanei;#aooldkhfa'"
+        const decoded =  jwt.verify(token,secretKey)
+        // ทำการดึงข้อมูลadmin
+        const partner = await Partner.findOne({name:decoded.name})
+        return res.status(200).send({status:true,data:partner})
+    }
+    catch(error){
+        return res.status(500).send({status:false,error:error.message});
+    }
+})
+
+
 //ค้นหาข้อมูลเฉพาะ id
 router.get('/:id',paramsAuth.verifyTokenpartner, async(req,res)=>{
     try{
@@ -91,11 +107,10 @@ router.put('/:id',paramsAuth.onlypartner, async(req,res)=>{
         const id = req.params.id
         const checkofpartner = await Partner.findOne({_id:id})
         const telephone = req.body.telephone
-        const password = ( req.body.password!= undefined && req.body.password!= ""? bcrypt.hashSync(req.body.password, 10):checkofpartner.password)
+        const password = ( req.body.password!= undefined && req.body.password!=""? bcrypt.hashSync(req.body.password, 10):checkofpartner.password)
         const name = req.body.name
         const image_idcard = (req.body.image_idcard!= undefined && req.body.image_idcard!= "" ? req.body.image_idcard:checkofpartner.image_idcard)
-        //เช็คเลขซ้ำ
-        
+        //เช็คเลขซ้ำ  
         if(!checkofpartner){
             return res.status(400).send({status:false,message:`หาข้อมูลไม่เจอ`})
         }
@@ -254,19 +269,6 @@ router.put('/unstatusbooking/:id',adminAuth,async(req,res)=>{
     return res.status(200).send({message:`ปิดได้ไอดีpartner ${id} `,partner:edit})
 })
 
-router.post('/findpartner/',paramsAuth.onlypartner, async (req,res)=>{
-    try{
-        let token = req.headers["token"]
-        const secretKey = "i#ngikanei;#aooldkhfa'"
-        const decoded =  jwt.verify(token,secretKey)
-        // ทำการดึงข้อมูลadmin
-        const partner = await Partner.findOne({name:decoded.name})
-        return res.status(200).send({status:true,data:partner})
-    }
-    catch(error){
-        return res.status(500).send({status:false,error:error.message});
-    }
-})
 
 
 module.exports = router;

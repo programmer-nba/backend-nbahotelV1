@@ -23,6 +23,20 @@ router.get('/',adminAuth, async(req,res)=>{
         return res.status(500).send({status:false,error:error.message});
     }
 })
+//ค้นหา admin ตาม token
+router.get('/findadmin/',adminAuth, async (req,res)=>{
+    try{
+        let token = req.headers["token"]
+        const secretKey = "i#ngikanei;#aooldkhfa'"
+        const decoded =  jwt.verify(token,secretKey)
+        // ทำการดึงข้อมูลadmin
+        const admin = await Admin.findOne({name:decoded.name})
+        return res.status(200).send({status:true,data:admin})
+    }
+    catch(error){
+        return res.status(500).send({status:false,error:error.message});
+    }
+})
 //เรียกดูข้อมูลเฉพาะของ admin
 router.get('/:id',adminAuth, async(req,res)=>{
     try{
@@ -114,18 +128,6 @@ router.delete('/:id',adminAuth, async(req,res)=>{
     }
 })
 
-router.post('/findadmin/',adminAuth, async (req,res)=>{
-    try{
-        let token = req.headers["token"]
-        const secretKey = "i#ngikanei;#aooldkhfa'"
-        const decoded =  jwt.verify(token,secretKey)
-        // ทำการดึงข้อมูลadmin
-        const admin = await Admin.findOne({name:decoded.name})
-        return res.status(200).send({status:true,data:admin})
-    }
-    catch(error){
-        return res.status(500).send({status:false,error:error.message});
-    }
-})
+
 
 module.exports = router;
