@@ -37,4 +37,7 @@ router.put('/unapprove/:id',adminAuth,Room_status.unapprove)
 // partner เปิด-ปิด ห้องทั้งหมด
 router.put('/openstatus/',partnerAuth.onlypartner,Room_status.openstatus)
 router.put('/closestatus/',partnerAuth.onlypartner,Room_status.closestatus)
+// partner เปิด-ปิด ตาม room_id
+router.put('/openstatusbyid/:id',partnerAuth.onlypartner,Room_status.openstatusbyid)
+router.put('/closestatusbyid/:id',partnerAuth.onlypartner,Room_status.closestatusbyid)
 module.exports = router;

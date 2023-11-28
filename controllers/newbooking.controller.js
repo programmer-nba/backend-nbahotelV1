@@ -4,6 +4,7 @@ const {Room} = require("../models/room.schema");
 const Partner = require("../models/partner.schema");
 const Member = require("../models/member.schema");
 const Payment = require("../models/prepayment.schema");
+const {PrePayment} = require('../models/prepayment.schema');
 
 const dayjs = require("dayjs");
 const jwt = require("jsonwebtoken");
@@ -60,6 +61,58 @@ module.exports.addbooking = async (req, res) => {
     });
     const add = await booking.save();
     res.status(200).send({status:true,message:"จองห้องพักแล้วกรุณารอการชำระเงิน",data:add});
+  } catch (error) {
+    return res.status(500).send({status:false,error:error.message});
+  }
+}
+
+//สร้างข้อมูลการจองแล้วจ่ายเงินอัตโนมัติ
+module.exports.addbookingpayment = async (req, res) => {
+  try {
+    let token = req.headers["token"]
+    const secretKey = "i#ngikanei;#aooldkhfa'"
+    const decoded =  jwt.verify(token,secretKey)
+    // ทำการดึงข้อมูลadmin
+    const members = await Member.findOne({name:decoded.name})
+    const member_id = members._id
+    const room_id = req.body.room_id;
+    const date_from = req.body.date_from;
+    const date_to = req.body.date_to;
+    const price = req.body.price;
+    //เช็คว่ารับค่ามาหรือเปล่า
+    if (!member_id || !room_id || !date_from || !date_to || !price) {
+      res.status(400).send({message: "กรุณากรอกข้อมูลให้ครบ"});
+    }
+    //เช็คว่ามีข้อมูลใน member hotel room data หรือเปล่า
+    const member = await Member.findOne({_id:member_id});
+    if (!member) {
+      res.status(400).send({message: "หาข้อมูล member ไม่เจอ"});
+    }
+    const room = await Room.findOne({_id: room_id});
+    if (!room) {
+      res.status(400).send({message: "หาข้อมูล room ไม่เจอ"});
+    }
+    const newStatus = {
+        statusbooking: "จองห้องสำเร็จ",
+        timestamps: new Date(),
+    };
+    const booking = new Booking({
+      member_id: member_id,
+      room_id: room_id,
+      date_from: date_from,
+      date_to: date_to,
+      price: price,
+      status:newStatus
+    });
+    const add = await booking.save();
+    const datapayment = new PrePayment({
+      booking_id : add._id,
+      total_amount : price,
+      payment_status: "โอนเรียบร้อย"
+    })
+    const addpayment = await datapayment.save();
+    res.status(200).send({status:true,message:"จองห้องพักสำเร็จแล้ว",data:add,payment:addpayment});
+
   } catch (error) {
     return res.status(500).send({status:false,error:error.message});
   }

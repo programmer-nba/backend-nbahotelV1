@@ -66,7 +66,27 @@ module.exports.closestatus = async (req,res)=>{
             return res.status(404).send({status:false,message:'หา id partner ไม่เจอ'})
         }
         const edit = await Room.updateMany({partner_id:partner._id},{statusbooking:false},{ new: true })
-        return res.status(200).send({status:true,message:`ไอดี ${partner.name} เปิดการจองเรียบร้อยแล้ว`})
+        return res.status(200).send({status:true,message:`ไอดี ${partner.name} ปิดการจองเรียบร้อยแล้ว`})
+    }catch(error){
+        return res.status(500).send({status:false,error:error.message});
+    }  
+}
+
+module.exports.openstatusbyid = async (req,res)=>{
+    try{
+        const id = req.params.id
+        const edit = await Room.findByIdAndUpdate(id,{statusbooking:true},{ new: true })
+        return res.status(200).send({status:true,message:`ห้อง ${edit.name} เปิดการจองเรียบร้อยแล้ว `})
+    }catch(error){
+        return res.status(500).send({status:false,error:error.message});
+    }  
+}
+
+module.exports.closestatusbyid = async (req,res)=>{
+    try{
+        const id = req.params.id
+        const edit = await Room.findByIdAndUpdate(id,{statusbooking:false},{ new: true })
+        return res.status(200).send({status:true,message:`ห้อง ${edit.name} ปิดการจองเรียบร้อยแล้ว`})
     }catch(error){
         return res.status(500).send({status:false,error:error.message});
     }  

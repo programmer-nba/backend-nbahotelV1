@@ -8,6 +8,8 @@ const memberAuth = require('../authentication/memberauth')
 
 //สร้าง 
 router.post('/',memberAuth.verifyTokenmember,Booking.addbooking)
+//สร้าง และ ชำระเงินอัตโนมัติ
+router.post('/bookingandpayment/',memberAuth.verifyTokenmember,Booking.addbookingpayment)
 //เรียกข้อมูลการจอง
 router.get('/',memberAuth.all,Booking.GetAll)
 //เรีัยกข้อมูลตาม partner 
