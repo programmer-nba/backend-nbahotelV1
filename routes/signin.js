@@ -76,6 +76,7 @@ router.post('/', async(req,res)=>{
      sign.end();
      var signature = sign.sign(privateKey, 'hex');
      const payload = {
+      _id:checksignin._id,
       name: checksignin.name,
       roles : roles,
       signature: signature
@@ -105,6 +106,7 @@ router.get('/me/',MemberAuth.all,async(req,res)=>{
 
     const decodded =jwt.verify(token,process.env.SECRET_KEY)
     const dataResponse = {
+      _id:decodded.id,
       name: decodded.name,
       roles:decodded.roles,
       signature :decodded.signature

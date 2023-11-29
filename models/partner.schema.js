@@ -4,7 +4,7 @@ const mongoose = require('mongoose')
 const partnerSchema = new mongoose.Schema({
   telephone: {type: String, required: true,unique: true},
   password:{type: String , required:true},
-  name: {type: String,required:true,unique:true},
+  name: {type: String,required:true},
   idcard:{type:String,require:true},
   image_idcard:{ type: [String]},
   address: { type: String, required: true },
@@ -16,6 +16,10 @@ const partnerSchema = new mongoose.Schema({
   token: {type: String,required: false,default:''},
   webhook: {type: String,required: false,default:''},
   status:{type:Boolean,default: false},
+  email:{type:String},
+  bank:{type:String},
+  numberbank:{type:String},
+  image_bank:{type:[String]},
   approve : {
     type: [
       {

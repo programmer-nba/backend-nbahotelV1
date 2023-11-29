@@ -269,6 +269,67 @@ router.put('/unstatusbooking/:id',adminAuth,async(req,res)=>{
     return res.status(200).send({message:`ปิดได้ไอดีpartner ${id} `,partner:edit})
 })
 
+//เพิ่มรูปบัญชี
+router.post('/picturebank/:id',async(req,res)=>{
+    try{
+        const id = req.params.id;
+        const partner = await Partner.findById(id);
+        if(!partner){
+            return res.status(404).send(`partner id ${id} not found`);
+        }
+        let upload = multer({ storage: storage }).array("imgbank", 20);
+        upload(req, res, async function (err) {
+            const reqFiles = [];
+            const result=[];
+            if (!req.files) {
+                res.status(400).send({ message: "ไม่ได้ส่งภาพมา", status: false });
+            } else {
+                const url = req.protocol + "://" + req.get("host");
+                for (var i = 0; i < req.files.length; i++) {
+                const url =  await uploadFileCreate(req.files, res, { i, reqFiles });
+                result.push(url);
+                //   reqFiles.push(url + "/public/" + req.files[i].filename);
+                }
+                let edit = ""
+                if(result){
+                    const data = partner.image_bank.concat(reqFiles);
+                    edit = await Partner.findByIdAndUpdate(id,{image_bank:data},{returnOriginal:false})
+                    res.status(201).send({
+                        message: "สร้างรูปภาพเสร็จเเล้ว",
+                        status: true,
+                        partner:edit,
+                        file: reqFiles,
+                        result:result,
+                    });
+                }else{
+                    return res.status(404).send({message:`อัพเดทข้อมูลล้มเหลว`});
+                }
+            }
+          })
+    }catch(error){
+        return res.status(500).send(error);
+    }
+       
+})
 
+router.delete('/:id/picturebank/:image_idcard',async(req,res)=>{
+    const partnerid = req.params.id;
+    const pictureid = req.params.image_idcard;
 
+    try {
+  
+    const partner = await Partner.findById(partnerid);
+  
+    if(!partner){
+        return res.status(404).send(`partner ${partnerid} not found`);
+    }
+    await deleteFile(pictureid);
+    const updatedata = partner.image_bank.filter(image => image !== pictureid)
+    const edit = await Partner.findByIdAndUpdate(partnerid,{image_bank:updatedata},{returnOriginal:false})
+    return res.status(200).send({message:"ลบภาพสำเร็จแล้ว",partner:edit})
+  
+    } catch (error) {
+      return res.status(500).send(error);
+    }
+})
 module.exports = router;

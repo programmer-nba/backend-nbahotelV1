@@ -6,6 +6,7 @@ var bcrypt = require("bcryptjs")
 const Admin = require("../models/admin.schema")
 const Partner = require("../models/partner.schema")
 const Member = require("../models/member.schema");
+const Contract = require('../models/contract.schema')
 const adminAuth = require("../authentication/adminAuth")
 //เรียกใช้ function เช็คชื่อและเบอร์โทรศัพท์
 const checkalluser = require("../functions/check-alluser")
@@ -60,10 +61,6 @@ router.post("/partner", async (req, res) => {
     if(Check === true){
       return res.status(400).send({status:false,message:`เบอร์ ${telephone} ซ้ำ กรุณาเปลี่ยนใหม่`})
     }
-    const Checkname = await Partner.findOne({name:name})
-    if(Checkname){
-      return res.status(400).send({status:false,message:`ชื่อ ${name} ซ้ำ กรุณาเปลี่ยนใหม่`})
-    }
 
     // รับค่า req 
     const Partnerdata = new Partner({
@@ -76,11 +73,21 @@ router.post("/partner", async (req, res) => {
       amphure:req.body.amphure,
       province:req.body.province,
       level : req.body.level,
+      email:req.body.email,
+      bank:req.body.bank,
+      numberbank:req.body.numberbank,
     });
     //เพิ่มข้อมูล
-    await Partnerdata.save().then(savedPartner=>{
-      return res.status(200).send({status:true,message:'บันทึกผู้ใช้เรียบร้อย(Partner)',data:savedPartner});
+    const partner = await Partnerdata.save()
+    const datacontract = new Contract({
+      status: true,
+      time: new Date(),
+      signature: partner.name,
+      message:`คุณ ${partner.name} ได้ยินยอมในสัญญาเรียบร้อยแล้ว`,
+      partner_id: partner._id
     })
+    const contract = await datacontract.save() 
+    return res.status(200).send({status:true,message:'บันทึกผู้ใช้เรียบร้อย(Partner)',data:partner,contract:contract});
   } catch (error) {
     console.log(error);
     return res.status(500).send({status: false, message: error.message});
