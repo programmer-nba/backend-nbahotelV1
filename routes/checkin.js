@@ -14,7 +14,7 @@ router.get('/member/',memberAuth.memberandpartner, async(req,res)=>{
         let token = req.headers["token"]
         const secretKey = "i#ngikanei;#aooldkhfa'"
         const decoded =  jwt.verify(token,secretKey)
-        const member = await Member.findOne({name:decoded.name})
+        const member = await Member.findOne({_id:decoded._id})
         //หาจอง
         const booking = await Booking.find({ member_id: member._id })
         //หาbooking_id

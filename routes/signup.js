@@ -24,11 +24,6 @@ router.post("/member", async (req, res) => {
     if(Check === true){
       return res.status(400).send({status:false,message:`เบอร์ ${telephone} ซ้ำ กรุณาเปลี่ยนใหม่`})
     }
-    
-    const Checkname = await Member.findOne({name:name})
-    if(Checkname){
-      return res.status(400).send({status:false,message:`ชื่อ ${name} ซ้ำ กรุณาเปลี่ยนใหม่`})
-    }
 
     // รับค่า req 
     const Memberdata = new Member({
@@ -98,18 +93,12 @@ router.post("/partner", async (req, res) => {
 router.post("/admin",adminAuth, async (req, res) => {
   try {
     const telephone = req.body.telephone
-    const name = req.body.name
     //เช็คเบอร์ซ้ำ
     const Check = await checkalluser.Checktelephone(telephone).then((status)=>{
       return status
     })
     if(Check === true){
       return res.status(400).send({status:false,message:`เบอร์ ${telephone} ซ้ำ กรุณาเปลี่ยนใหม่`})
-    }
-
-    const Checkname = await Admin.findOne({name:name})
-    if(Checkname){
-      return res.status(400).send({status:false,message:`ชื่อ ${name} ซ้ำ กรุณาเปลี่ยนใหม่`})
     }
     // รับค่า req 
     const Admindata = new Admin({

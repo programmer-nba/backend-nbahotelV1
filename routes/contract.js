@@ -24,7 +24,7 @@ router.get('/partner/',partnerAuth.verifyTokenpartner,async (req,res)=>{
         let token = req.headers["token"]
         const secretKey = "i#ngikanei;#aooldkhfa'"
         const decoded =  jwt.verify(token,secretKey)
-        const partner = await Partner.findOne({name:decoded.name})
+        const partner = await Partner.findOne({_id:decoded._id})
         const contract = await Contract.findOne({partner_id:partner._id}).populate("partner_id")
         if(!contract){
             return res.status(200).send({status:false,message:"ไม่มีข้อมูล contract"})
@@ -55,7 +55,7 @@ router.post('/',partnerAuth.onlypartner,async (req,res)=>{
         let token = req.headers["token"]
         const secretKey = "i#ngikanei;#aooldkhfa'"
         const decoded =  jwt.verify(token,secretKey)
-        const partner = await Partner.findOne({name:decoded.name})
+        const partner = await Partner.findOne({_id:decoded._id})
         const Contractdata = new Contract({
             partner_id: partner._id,
             status: false,

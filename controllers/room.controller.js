@@ -33,11 +33,11 @@ module.exports.GetPartner = async (req,res) => {
     
     try {
          // เรียก token มาดึง partner_id
-         let token = req.headers["token"]
-         const secretKey = "i#ngikanei;#aooldkhfa'"
-         const decoded =  await jwt.verify(token,secretKey)
+        let token = req.headers["token"]
+        const secretKey = "i#ngikanei;#aooldkhfa'"
+        const decoded = jwt.verify(token,secretKey)
          // ทำการดึงข้อมูล id ใน partner
-         const partner = await Partner.findOne({name:decoded.name})
+        const partner = await Partner.findOne({_id:decoded._id})
 
         const result = await Room.find({ partner_id: partner._id }).populate('partner_id').populate('type');
         if (!result) {
@@ -65,9 +65,9 @@ module.exports.Create = async (req, res) => {
         // เรียก token มาดึง partner_id
         let token = req.headers["token"]
         const secretKey = "i#ngikanei;#aooldkhfa'"
-        const decoded =  await jwt.verify(token,secretKey)
+        const decoded =  jwt.verify(token,secretKey)
         // ทำการดึงข้อมูล id ใน partner
-        const partner = await Partner.findOne({name:decoded.name})
+        const partner = await Partner.findOne({_id:decoded._id})
 
         const data = {
             name:req.body.name,

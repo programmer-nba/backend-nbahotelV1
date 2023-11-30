@@ -11,7 +11,7 @@ const verifyTokenadmin = async(req, res, next)=>{
         }
 
         // ทำการยืนยันสิทธิ์ token
-        const decoded =  await jwt.verify(token,secretKey)
+        const decoded =  jwt.verify(token,secretKey)
         if(decoded.roles ==="admin"){
             req.users = decoded.data
             next();

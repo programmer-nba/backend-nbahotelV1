@@ -13,7 +13,7 @@ verifyTokenmember = async (req,res,next) => {
         }
         
         // ทำการยืนยันสิทธิ์ token
-        const decoded =  await jwt.verify(token,secretKey)
+        const decoded =  jwt.verify(token,secretKey)
         if(decoded.roles ==="member"){
             req.users = decoded.data
             next()    
@@ -36,7 +36,7 @@ memberandpartner = async (req,res,next) => {
         }
         
         // ทำการยืนยันสิทธิ์ token
-        const decoded =  await jwt.verify(token,secretKey)
+        const decoded =  jwt.verify(token,secretKey)
         if(decoded.roles ==="member"||decoded.roles ==="partner"){
             req.users = decoded.data
             next()    
@@ -58,7 +58,7 @@ all = async (req,res,next) => {
         }
         
         // ทำการยืนยันสิทธิ์ token
-        const decoded =  await jwt.verify(token,secretKey)
+        const decoded =  jwt.verify(token,secretKey)
         req.users = decoded.data
         next()    
     }catch (err){

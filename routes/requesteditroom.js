@@ -17,7 +17,7 @@ router.post('/',partnerAuth.onlypartner,async (req,res)=>{
         let token = req.headers["token"]
         const secretKey = "i#ngikanei;#aooldkhfa'"
         const decoded =  jwt.verify(token,secretKey)
-        const partner = await Partner.findOne({name:decoded.name})
+        const partner = await Partner.findOne({_id:decoded._id})
         const dataeditroom = new Requesteditroom({
                     name:name,
                     description:description,

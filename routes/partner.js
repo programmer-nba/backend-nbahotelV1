@@ -35,7 +35,7 @@ router.get('/findpartner/',paramsAuth.onlypartner, async (req,res)=>{
         const secretKey = "i#ngikanei;#aooldkhfa'"
         const decoded =  jwt.verify(token,secretKey)
         // ทำการดึงข้อมูลadmin
-        const partner = await Partner.findOne({name:decoded.name})
+        const partner = await Partner.findOne({_id:decoded._id})
         return res.status(200).send({status:true,data:partner})
     }
     catch(error){
@@ -122,14 +122,6 @@ router.put('/:id',paramsAuth.onlypartner, async(req,res)=>{
                 return res.status(400).send({status:false,message:`เบอร์${telephone}ซ้ำ กรุณาเปลี่ยนใหม่`})
             }
         }
-        ////ถ้าหา เบอร์โทรศัพท์ เหมือนกับที่ ส่งมาแสดงว่าตัวเดียวกัน
-        if(name != checkofpartner.name){
-            const Checkname = await Admin.findOne({name:name})
-            if(Checkname){
-                return res.status(400).send({status:false,message:`ชื่อ ${name} ซ้ำ กรุณาเปลี่ยนใหม่`})
-            }
-        }
-        const companyname = req.body.companyname
         const level = req.body.level
         const partnerdata = {
             telephone: telephone,
@@ -141,7 +133,10 @@ router.put('/:id',paramsAuth.onlypartner, async(req,res)=>{
             tambon:req.body.tambon,
             amphure:req.body.amphure,
             province:req.body.province,
-            level : level
+            level : level, 
+            email:req.body.email,
+            bank:req.body.bank,
+            numberbank:req.body.numberbank,
         }
         const editpartner = await Partner.findByIdAndUpdate(id,partnerdata,{ new: true })
         if(!editpartner){

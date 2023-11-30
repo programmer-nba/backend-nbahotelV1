@@ -30,7 +30,7 @@ router.get('/findadmin/',adminAuth, async (req,res)=>{
         const secretKey = "i#ngikanei;#aooldkhfa'"
         const decoded =  jwt.verify(token,secretKey)
         // ทำการดึงข้อมูลadmin
-        const admin = await Admin.findOne({name:decoded.name})
+        const admin = await Admin.findOne({_id:decoded._id})
         return res.status(200).send({status:true,data:admin})
     }
     catch(error){
@@ -50,10 +50,8 @@ router.get('/:id',adminAuth, async(req,res)=>{
         return res.status(500).send({status:false,error:error.message});
     }    
 })
- 
 
 // แก้ไขข้อมูลadmin
-
 router.put('/:id',adminAuth, async (req,res)=>{
     try{
         const id = req.params.id
@@ -75,16 +73,6 @@ router.put('/:id',adminAuth, async (req,res)=>{
             }
             
         }
-        
-        if(name != checkofadmin.name){
-            
-            // เช็คชื่อซ้ำ
-            const Checkname = await Admin.findOne({name:name})
-            if(Checkname){
-                return res.status(400).send({status:false,message:`ชื่อ ${name} ซ้ำ กรุณาเปลี่ยนใหม่`})
-            }
-        }
-
         const password = ( req.body.password!= undefined && req.body.password!= ""? bcrypt.hashSync(req.body.password, 10):checkofadmin.password)
         const roles = req.body.roles
         const level = req.body.level

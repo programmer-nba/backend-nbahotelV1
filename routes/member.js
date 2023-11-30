@@ -31,7 +31,7 @@ router.get('/findmember/',memberAuth.verifyTokenmember, async (req,res)=>{
         const secretKey = "i#ngikanei;#aooldkhfa'"
         const decoded =  jwt.verify(token,secretKey)
         // ทำการดึงข้อมูลadmin
-        const member = await Member.findOne({name:decoded.name})
+        const member = await Member.findOne({_id:decoded._id})
         return res.status(200).send({status:true,data:member})
     }
     catch(error){
@@ -86,13 +86,6 @@ router.put('/:id',memberAuth.verifyTokenmember, async (req,res)=>{
                 return res.status(400).send({status:false,message:`เบอร์${telephone}ซ้ำ กรุณาเปลี่ยนใหม่`})
             }
             
-        }
-        if(name != checkofmember.name){
-            // เช็คชื่อซ้ำ
-            const Checkname = await Member.findOne({name:name})
-            if(Checkname){
-                return res.status(400).send({status:false,message:`ชื่อ ${name} ซ้ำ กรุณาเปลี่ยนใหม่`})
-            }
         }
         const password = ( req.body.password!= undefined && req.body.password!= ""? bcrypt.hashSync(req.body.password, 10):checkofmember.password)
         const firstname = req.body.firstname

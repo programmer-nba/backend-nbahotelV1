@@ -27,7 +27,7 @@ module.exports.addbooking = async (req, res) => {
     const secretKey = "i#ngikanei;#aooldkhfa'"
     const decoded =  jwt.verify(token,secretKey)
     // ทำการดึงข้อมูลadmin
-    const members = await Member.findOne({name:decoded.name})
+    const members = await Member.findOne({_id:decoded._id})
     const member_id = members._id
     const room_id = req.body.room_id;
     const date_from = req.body.date_from;
@@ -118,7 +118,7 @@ module.exports.GetBymember = async (req, res) => {
     let token = req.headers["token"]
     const secretKey = "i#ngikanei;#aooldkhfa'"
     const decoded =  jwt.verify(token,secretKey)
-    const member = await Member.findOne({name:decoded.name})
+    const member = await Member.findOne({_id:decoded._id})
     const member_id = member._id;
     const booking = await Booking.find({member_id: member_id}).populate("member_id").populate("room_id");
     if (!booking) {
@@ -136,7 +136,7 @@ module.exports.GetBypartner = async (req, res) => {
     let token = req.headers["token"]
     const secretKey = "i#ngikanei;#aooldkhfa'"
     const decoded =  jwt.verify(token,secretKey)
-    const partner = await Partner.findOne({name:decoded.name})
+    const partner = await Partner.findOne({_id:decoded._id})
     const room = await Room.find({partner_id:partner._id}) 
     const room_id = room.map(room=>room._id)
     const booking = await Booking.find({ room_id: { $in: room_id } }) .populate({ path: "member_id" })
@@ -162,7 +162,7 @@ module.exports.GetBypartnerandpayment = async (req, res) => {
     let token = req.headers["token"]
     const secretKey = "i#ngikanei;#aooldkhfa'"
     const decoded =  jwt.verify(token,secretKey)
-    const partner = await Partner.findOne({name:decoded.name})
+    const partner = await Partner.findOne({_id:decoded._id})
     const room = await Room.find({partner_id:partner._id}) 
     const room_id = room.map(room=>room._id)
     const booking = await Booking.find({ room_id: { $in: room_id } }) .populate({ path: "member_id" })

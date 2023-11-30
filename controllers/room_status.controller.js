@@ -40,9 +40,9 @@ module.exports.openstatus = async (req,res)=>{
     try{
         let token = req.headers["token"]
         const secretKey = "i#ngikanei;#aooldkhfa'"
-        const decoded =  await jwt.verify(token,secretKey)
+        const decoded =  jwt.verify(token,secretKey)
         // ทำการดึงข้อมูล id ใน partner
-        const partner = await Partner.findOne({name:decoded.name})
+        const partner = await Partner.findOne({_id:decoded._id})
         if(!partner)
         {
             return res.status(404).send({status:false,message:'หา id partner ไม่เจอ'})
@@ -58,9 +58,9 @@ module.exports.closestatus = async (req,res)=>{
     try{
         let token = req.headers["token"]
         const secretKey = "i#ngikanei;#aooldkhfa'"
-        const decoded =  await jwt.verify(token,secretKey)
+        const decoded =  jwt.verify(token,secretKey)
         // ทำการดึงข้อมูล id ใน partner
-        const partner = await Partner.findOne({name:decoded.name})
+        const partner = await Partner.findOne({_id:decoded._id})
         if(!partner)
         {
             return res.status(404).send({status:false,message:'หา id partner ไม่เจอ'})

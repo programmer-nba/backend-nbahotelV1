@@ -11,7 +11,7 @@ verifyTokenpartner = async (req,res,next) => {
             return res.status(403).send({status:false,message:'token หมดอายุ'});
         }
         // ทำการยืนยันสิทธิ์ token
-        const decoded =  await jwt.verify(token,secretKey)
+        const decoded =  jwt.verify(token,secretKey)
         if(decoded.roles === "partner" || decoded.roles ==="admin"){
             req.users = decoded.data
             next();
@@ -36,7 +36,7 @@ onlypartner = async (req,res,next) => {
             return res.status(403).send({status:false,message:'token หมดอายุ'});
         }
         // ทำการยืนยันสิทธิ์ token
-        const decoded =  await jwt.verify(token,secretKey)
+        const decoded =  jwt.verify(token,secretKey)
         if(decoded.roles === "partner"){
             req.users = decoded.data
             next();
