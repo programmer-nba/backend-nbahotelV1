@@ -74,7 +74,9 @@ module.exports.Create = async (req, res) => {
             description:req.body.description,
             phone_number:req.body.phone_number,
             price:req.body.price,
-            type:req.body.type,
+            type:req.body.type, 
+            typehotelbed: req.body.typehotelbed,// (เฉพาะเลือกโรงแรม)(ประเภทเตียง)
+            typehotelroom: req.body.typehotelroom,// (เฉพาะเลือกโรงแรม)(ห้องระดับ)
             guests:req.body.guests,
             bedroom:req.body.bedroom,
             bed:req.body.bed,
@@ -85,7 +87,12 @@ module.exports.Create = async (req, res) => {
             tambon:req.body.tambon,
             amphure:req.body.amphure,
             province:req.body.province,
-            partner_id:partner._id            
+            partner_id:partner._id, // เพิ่มใหม่
+            partnertype:req.body.partnertype, //(เจ้าของปล่อยเช่าและผู้เช่าปล่อยผู้เช่า)
+            timebookingstart: req.body.timebookingstart, //(เฉพาะผู้ปล่อยเช่า) (เวลาเริ่มต้น)
+            timebookingend: req.body.timebookingend, //(เฉพาะผู้ปล่อยเช่า) (เวลาสิ้นสุด)
+            nearlocation: req.body.nearlocation, //(ติดกับอะไร)
+            distancenearlocation: req.body.distancenearlocation //(ระยะทางติดกับอะไร)
         }
         const room = new Room(data);
         const add = await room.save()
@@ -117,6 +124,8 @@ module.exports.Update = async (req, res) => {
             phone_number:req.body.phone_number,
             price:req.body.price,
             type:req.body.type,
+            typehotelbed: req.body.typehotelbed,//(เฉพาะเลือกโรงแรม)(ประเภทเตียง)
+            typehotelroom: req.body.typehotelroom,//(เฉพาะเลือกโรงแรม)(ห้องระดับ)
             guests:req.body.guests,
             bedroom:req.body.bedroom,
             bed:req.body.bed,
@@ -126,7 +135,12 @@ module.exports.Update = async (req, res) => {
             address:req.body.address,
             tambon:req.body.tambon,
             amphure:req.body.amphure,
-            province:req.body.province,           
+            province:req.body.province,
+            partnertype:req.body.partnertype, //(เจ้าของปล่อยเช่าและผู้เช่าปล่อยผู้เช่า)
+            timebookingstart: req.body.timebookingstart, //(เฉพาะผู้ปล่อยเช่า) (เวลาเริ่มต้น)
+            timebookingend: req.body.timebookingend, //(เฉพาะผู้ปล่อยเช่า) (เวลาสิ้นสุด)
+            nearlocation: req.body.nearlocation, //(ติดกับอะไร)
+            distancenearlocation: req.body.distancenearlocation //(ระยะทางติดกับอะไร)           
         }
         const edit = await Room.findByIdAndUpdate(id,data,{ returnOriginal: false })
         return res.status(200).send({status:true,message:"แก้ไขข้อมูลห้องสำเร็จ",data:edit})

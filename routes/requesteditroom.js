@@ -13,7 +13,8 @@ router.post('/',partnerAuth.onlypartner,async (req,res)=>{
     try {
         const {name,description,phone_number,price,guests,bedroom,bed,bathroom
             ,tambon,address,amphure,province,partner_id
-            ,type,Detailsedit,room_id,latitude,longitude} = req.body
+            ,type,Detailsedit,room_id,latitude,longitude,typehotelbed,typehotelroom
+            ,partnertype,timebookingstart,timebookingend,nearlocation,distancenearlocation} = req.body
         let token = req.headers["token"]
         const secretKey = "i#ngikanei;#aooldkhfa'"
         const decoded =  jwt.verify(token,secretKey)
@@ -24,6 +25,8 @@ router.post('/',partnerAuth.onlypartner,async (req,res)=>{
                     phone_number:phone_number,
                     price:price,
                     type:type,
+                    typehotelbed:typehotelbed ,//(เฉพาะโรงแรม) (ประเภทเตียง) 
+                    typehotelroom:typehotelroom,//(เฉพาะโรงแรม)(ห้องระดับ)
                     guests:guests,
                     bedroom:bedroom,
                     bed:bed,
@@ -36,7 +39,12 @@ router.post('/',partnerAuth.onlypartner,async (req,res)=>{
                     province:province, 
                     partner_id:partner._id,
                     Detailsedit:Detailsedit,
-                    room_id:room_id 
+                    room_id:room_id ,
+                    partnertype: partnertype,//(เจ้าของปล่อยเช่าและผู้เช่าปล่อยผู้เช่า)
+                    timebookingstart: timebookingstart,//(เฉพาะผู้ปล่อยเช่า) (เวลาเริ่มต้น)
+                    timebookingend: timebookingend,//(เฉพาะผู้ปล่อยเช่า) (เวลาสิ้นสุด)
+                    nearlocation:nearlocation,//(ติดกับอะไร)
+                    distancenearlocation:distancenearlocation,//(ระยะทางติดกับอะไร)
         }) 
         const add = await dataeditroom.save()
         if(add){
@@ -81,6 +89,8 @@ router.put('/accept/:id',adminAuth,async (req,res)=>{
             phone_number:requesteditroomdata.phone_number,
             price:requesteditroomdata.price,
             type:requesteditroomdata.type,
+            typehotelbed:requesteditroomdata.typehotelbed ,//(เฉพาะโรงแรม) (ประเภทเตียง) 
+            typehotelroom:requesteditroomdata.typehotelroom,//(เฉพาะโรงแรม)(ห้องระดับ)
             guests:requesteditroomdata.guests,
             bedroom:requesteditroomdata.bedroom,
             bed:requesteditroomdata.bed,
@@ -90,7 +100,12 @@ router.put('/accept/:id',adminAuth,async (req,res)=>{
             address:requesteditroomdata.address,
             tambon:requesteditroomdata.tambon,
             amphure:requesteditroomdata.amphure,
-            province:requesteditroomdata.province,           
+            province:requesteditroomdata.province,
+            partnertype: requesteditroomdata.partnertype,//(เจ้าของปล่อยเช่าและผู้เช่าปล่อยผู้เช่า)
+            timebookingstart: requesteditroomdata.timebookingstart,//(เฉพาะผู้ปล่อยเช่า) (เวลาเริ่มต้น)
+            timebookingend:requesteditroomdata.timebookingend,//(เฉพาะผู้ปล่อยเช่า) (เวลาสิ้นสุด)
+            nearlocation:requesteditroomdata.nearlocation,//(ติดกับอะไร)
+            distancenearlocation:requesteditroomdata.distancenearlocation,//(ระยะทางติดกับอะไร)           
         }
         const editroom = await Room.findByIdAndUpdate({_id:requesteditroomdata.room_id},data,{new:true})
         const edit = await Requesteditroom.findByIdAndUpdate(id,{status:true},{new:true})

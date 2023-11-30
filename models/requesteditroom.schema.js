@@ -16,14 +16,21 @@ const requesteditroom = new mongoose.Schema({
   province : { type: String, required: true },
   partner_id:{type: mongoose.Schema.Types.ObjectId,ref:'Partner',required:true},
   type:{type: mongoose.Schema.Types.ObjectId,ref:'RoomType',required:true},
+  typehotelbed: {type:String},//(เฉพาะโรงแรม) (ประเภทเตียง) 
+  typehotelroom:{type:String},//(เฉพาะโรงแรม)(ห้องระดับ)
   image:{ type: [String]},
   latitude: { type: Number},
   longitude: { type: Number},
   Detailsedit:{type:String},
   status:{type:Boolean,default: false},
-  room_id :{type: mongoose.Schema.Types.ObjectId,ref:'Room',required:true}
+  room_id :{type: mongoose.Schema.Types.ObjectId,ref:'Room',required:true}, //เพิ่ม
+  partnertype:{type:String,required:true}, //(เจ้าของปล่อยเช่าและผู้เช่าปล่อยผู้เช่า)
+  timebookingstart:{type:Date},//(เฉพาะผู้ปล่อยเช่า)(เวลาเริ่มต้น)
+  timebookingend:{type:Date},//(เฉพาะผู้ปล่อยเช่า) (เวลาสิ้นสุด)
+  nearlocation:{type:String},//(ติดกับอะไร)
+  distancenearlocation:{type:Number},//(ระยะทางติดกับอะไร)
 })
-
+ 
 const Requesteditroom = mongoose.model('requesteditroom', requesteditroom)
 
 module.exports = Requesteditroom
