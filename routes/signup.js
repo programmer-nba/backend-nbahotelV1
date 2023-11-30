@@ -7,6 +7,7 @@ const Admin = require("../models/admin.schema")
 const Partner = require("../models/partner.schema")
 const Member = require("../models/member.schema");
 const Contract = require('../models/contract.schema')
+const ContractMember = require('../models/contractmember.schema')
 const adminAuth = require("../authentication/adminAuth")
 //เรียกใช้ function เช็คชื่อและเบอร์โทรศัพท์
 const checkalluser = require("../functions/check-alluser")
@@ -36,9 +37,16 @@ router.post("/member", async (req, res) => {
       roles: req.body.roles,
     });
     //เพิ่มข้อมูล
-    await Memberdata.save().then(savedMember=>{
-      return res.status(200).send({status:true,message:'บันทึกผู้ใช้เรียบร้อย(member)',data:savedMember});
+    const member = await Memberdata.save()
+    const datacontract = new ContractMember({
+      status: true,
+      time: new Date(),
+      signature: member.name,
+      message:`คุณ ${member.name} ได้ยินยอมในสัญญาเรียบร้อยแล้ว`,
+      member_id: member._id
     })
+    const contract = await datacontract.save() 
+    return res.status(200).send({status:true,message:'บันทึกผู้ใช้เรียบร้อย(member)',data:member,contract:contract});
   } catch (error) {
     console.log(error);
     return res.status(500).send({status: false, message: error.message});
