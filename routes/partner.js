@@ -240,6 +240,25 @@ router.delete('/:id/picture/:image_idcard',async(req,res)=>{
       return res.status(500).send(error);
     }
 })
+router.delete('/delete/allpicture/:id',async(req,res)=>{
+    const partnerid = req.params.id;
+    try {
+  
+    const partner = await Partner.findById(partnerid);
+  
+    if(!partner){
+        return res.status(404).send(`partner ${partnerid} not found`);
+    }
+    for (const pictureid of partner.image_idcard) {
+        await deleteFile(pictureid);  
+    }
+    const edit = await Partner.findByIdAndUpdate(partnerid,{image_idcard:null},{returnOriginal:false})
+    return res.status(200).send({message:"ลบภาพสำเร็จแล้ว",partner:edit})
+  
+    } catch (error) {
+      return res.status(500).send(error);
+    }
+})
 
 //เปิด-ปิด การทำรายการไอดี partner ได้
 router.put('/statusbooking/:id',adminAuth,async(req,res)=>{
