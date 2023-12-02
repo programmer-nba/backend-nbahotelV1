@@ -80,7 +80,7 @@ async function deleteFile(fileId) {
     supportsTeamDrives: false,
   });
 
-  console.log(res);
+  // console.log(res);
   return res.data;
 }
 

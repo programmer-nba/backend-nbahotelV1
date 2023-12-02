@@ -122,6 +122,15 @@ router.put('/:id',paramsAuth.onlypartner, async(req,res)=>{
                 return res.status(400).send({status:false,message:`เบอร์${telephone}ซ้ำ กรุณาเปลี่ยนใหม่`})
             }
         }
+        //มีการส่งรูปมาแก้ไขหรือไม่
+        const changeimage_bank = (req.body.changeimage_bank!= undefined && req.body.changeimage_bank!=""? req.body.changeimage_bank:false)
+        if(changeimage_bank === true)
+        {
+            for (const pictureid of checkofpartner.image_bank) {
+                await deleteFile(pictureid);  
+            }
+            const deletepicimagebank =await Partner.findByIdAndUpdate(id,{$set: { image_bank: [] }})
+        }
         const level = req.body.level
         const partnerdata = {
             telephone: telephone,
@@ -252,7 +261,7 @@ router.delete('/delete/allpicture/:id',async(req,res)=>{
     for (const pictureid of partner.image_idcard) {
         await deleteFile(pictureid);  
     }
-    const edit = await Partner.findByIdAndUpdate(partnerid,{image_idcard:null},{returnOriginal:false})
+    const edit = await Partner.findByIdAndUpdate(partnerid,{image_idcard:[]},{returnOriginal:false})
     return res.status(200).send({message:"ลบภาพสำเร็จแล้ว",partner:edit})
   
     } catch (error) {
