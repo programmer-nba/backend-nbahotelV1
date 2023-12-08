@@ -16,7 +16,7 @@ module.exports.Create = async (req, res) => {
 
     const room = await Room.findById(id);
     if(!room){
-      return res.status(404).send(`Room id ${id} not found`);
+      return res.status(200).send(`Room id ${id} not found`);
     }
     
     let upload = multer({ storage: storage }).array("imgCollection", 20);
@@ -29,7 +29,7 @@ module.exports.Create = async (req, res) => {
       }
 
       if (!req.files) {
-        res.status(500).send({ message: "มีบางอย่างผิดพลาด", status: false });
+        res.status(200).send({ message: "มีบางอย่างผิดพลาด", status: false });
       } else {
         const url = req.protocol + "://" + req.get("host");
         for (var i = 0; i < req.files.length; i++) {
@@ -71,7 +71,7 @@ module.exports.Delete = async (req,res) =>{
     const room = await Room.findById(roomid);
 
     if(!room){
-      return res.status(404).send(`Room ${roomid} not found`);
+      return res.status(200).send(`Room ${roomid} not found`);
     }
 
     await deleteFile(pictureid);

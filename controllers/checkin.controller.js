@@ -11,13 +11,13 @@ module.exports.VerifyCheckedInUser = async (req,res) =>{
     $and:[{ref_number:req.body.ref_number},{customer_tel:req.body.customer_tel}]})
 
         if(!booking || booking.length<=0){
-            return res.status(404).send({message:'no booking found'});
+            return res.status(200).send({message:'no booking found'});
         }
 
         const status = booking.status;
 
         if(status[status.length-1].name !=='จองแล้ว')  {
-            return res.status(400).send({message:'This booking is not accepted'});
+            return res.status(200).send({message:'This booking is not accepted'});
         }
     
  

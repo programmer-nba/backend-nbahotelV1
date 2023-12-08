@@ -61,13 +61,13 @@ router.post('/', async(req,res)=>{
     })
     
     if(checksignin === "user not found"){
-      return res.status(400).send({ status: false, message: "user not found" });
+      return res.status(200).send({ status: false, message: "user not found" });
     } else if(checksignin === "Invalid Password"){
-      return res.status(500).send({ status: false, message: "Invalid Password" })
+      return res.status(200).send({ status: false, message: "Invalid Password" })
     }
     if(roles=== "partner"){
       if(checksignin.status === false){
-        return res.status(500).send({ status: false, message: "ยังไม่สามารถล็อคอินได้ เนื่องจากยังไม่ได้อนุมัติ" })
+        return res.status(200).send({ status: false, message: "ยังไม่สามารถล็อคอินได้ เนื่องจากยังไม่ได้อนุมัติ" })
       }
       //รอแก้
     }

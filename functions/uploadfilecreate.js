@@ -78,7 +78,7 @@ async function deleteFile(fileId) {
     supportsAllDrives: false,
     // Deprecated use supportsAllDrives instead.
     supportsTeamDrives: false,
-  });
+  }).catch((error)=>{return false});
 
   // console.log(res);
   return res.data;

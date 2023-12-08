@@ -20,7 +20,7 @@ router.get('/',adminAuth, async(req,res)=>{
     try{
         const partnerdata = await Partner.find()
         if(!partnerdata){
-            return res.status(404).send({status:false,message:"ไม่มีข้อมูล partner"})
+            return res.status(200).send({status:false,message:"ไม่มีข้อมูล partner"})
         }
         return res.status(200).send({status:true,data:partnerdata})
     }catch (error) {
@@ -51,7 +51,7 @@ router.get('/:id',paramsAuth.verifyTokenpartner, async(req,res)=>{
         const partnerdata = await Partner.findOne({_id:id})
 
         if(!partnerdata){
-            return res.status(404).send({status:false,message:"หาข้อมูลไม่เจอ partner"})
+            return res.status(200).send({status:false,message:"หาข้อมูลไม่เจอ partner"})
         }
         return res.status(200).send({status:true,data:partnerdata})
     }
@@ -71,7 +71,7 @@ router.put('/approve/:id',adminAuth, async(req,res)=>{
           
         const approvepartner = await Partner.findByIdAndUpdate({ _id: id },{ $push: { approve: newStatus},status:true ,statusbooking:true},{ new: true })
         if(!approvepartner){
-            return res.status(404).send({status:false,message:"id ที่ส่งมาไม่มีในข้อมูล partner"})
+            return res.status(200).send({status:false,message:"id ที่ส่งมาไม่มีในข้อมูล partner"})
         }
         return res.status(200).send({status:true,message:`ข้อมูล ${approvepartner.name} ได้รับการอนุมัติ`,update:approvepartner})
 
@@ -91,7 +91,7 @@ router.put('/unapprove/:id',adminAuth, async(req,res)=>{
 
         const approvepartner = await Partner.findByIdAndUpdate({ _id: id },{ $push: { approve: newStatus } },{ new: true })
         if(!approvepartner){
-            return res.status(404).send({status:false,message:"id ที่ส่งมาไม่มีในข้อมูล partner"})
+            return res.status(200).send({status:false,message:"id ที่ส่งมาไม่มีในข้อมูล partner"})
         }
         return res.status(200).send({status:true,message:`ข้อมูล ${approvepartner.name} ไม่ได้รับอนุมัติ`,update:approvepartner})
 
@@ -112,14 +112,14 @@ router.put('/:id',paramsAuth.onlypartner, async(req,res)=>{
         const image_idcard = (req.body.image_idcard!= undefined && req.body.image_idcard!= "" ? req.body.image_idcard:checkofpartner.image_idcard)
         //เช็คเลขซ้ำ  
         if(!checkofpartner){
-            return res.status(400).send({status:false,message:`หาข้อมูลไม่เจอ`})
+            return res.status(200).send({status:false,message:`หาข้อมูลไม่เจอ`})
         }
         //ถ้าหา เบอร์โทรศัพท์ เหมือนกับที่ ส่งมาแสดงว่าตัวเดียวกัน
         if(telephone != checkofpartner.telephone)
         {
             const Check = await checkalluser.Checktelephone(telephone).then((status)=>{return status})
             if(Check === true){
-                return res.status(400).send({status:false,message:`เบอร์${telephone}ซ้ำ กรุณาเปลี่ยนใหม่`})
+                return res.status(200).send({status:false,message:`เบอร์${telephone}ซ้ำ กรุณาเปลี่ยนใหม่`})
             }
         }
         //มีการส่งรูปมาแก้ไขหรือไม่
@@ -149,7 +149,7 @@ router.put('/:id',paramsAuth.onlypartner, async(req,res)=>{
         }
         const editpartner = await Partner.findByIdAndUpdate(id,partnerdata,{ new: true })
         if(!editpartner){
-            return res.status(404).send({status:false,message:"id ที่ส่งมาไม่มีในข้อมูล partner"})
+            return res.status(200).send({status:false,message:"id ที่ส่งมาไม่มีในข้อมูล partner"})
         }
         return res.status(200).send({status:true,message:`อัพเดทข้อมูล ${editpartner.name} สำเร็จ`,update:editpartner})
 
@@ -165,7 +165,7 @@ router.delete('/:id',adminAuth, async(req,res)=>{
         const checkofpartner = await Partner.findOne({_id:id})
         if(!checkofpartner)
         {
-            return res.status(404).send({status:false,message:"หาข้อมูลไม่เจอ partner"})
+            return res.status(200).send({status:false,message:"หาข้อมูลไม่เจอ partner"})
         }
         const deletepartner = await Partner.deleteOne({_id:id})
         if(deletepartner){
@@ -193,14 +193,14 @@ router.post('/picture/:id',async(req,res)=>{
         const id = req.params.id;
         const partner = await Partner.findById(id);
         if(!partner){
-            return res.status(404).send(`partner id ${id} not found`);
+            return res.status(200).send(`partner id ${id} not found`);
         }
         let upload = multer({ storage: storage }).array("imgCollection", 20);
         upload(req, res, async function (err) {
             const reqFiles = [];
             const result=[];
             if (!req.files) {
-                res.status(400).send({ message: "ไม่ได้ส่งภาพมา", status: false });
+                res.status(200).send({ message: "ไม่ได้ส่งภาพมา", status: false });
             } else {
                 const url = req.protocol + "://" + req.get("host");
                 for (var i = 0; i < req.files.length; i++) {
@@ -220,7 +220,7 @@ router.post('/picture/:id',async(req,res)=>{
                         result:result,
                     });
                 }else{
-                    return res.status(404).send({message:`อัพเดทข้อมูลล้มเหลว`});
+                    return res.status(200).send({message:`อัพเดทข้อมูลล้มเหลว`});
                 }
             }
           })
@@ -238,7 +238,7 @@ router.delete('/:id/picture/:image_idcard',async(req,res)=>{
     const partner = await Partner.findById(partnerid);
   
     if(!partner){
-        return res.status(404).send(`partner ${partnerid} not found`);
+        return res.status(200).send(`partner ${partnerid} not found`);
     }
     await deleteFile(pictureid);
     const updatedata = partner.image_idcard.filter(image => image !== pictureid)
@@ -256,7 +256,7 @@ router.delete('/delete/allpicture/:id',async(req,res)=>{
     const partner = await Partner.findById(partnerid);
   
     if(!partner){
-        return res.status(404).send(`partner ${partnerid} not found`);
+        return res.status(200).send(`partner ${partnerid} not found`);
     }
     for (const pictureid of partner.image_idcard) {
         await deleteFile(pictureid);  
@@ -275,7 +275,7 @@ router.put('/statusbooking/:id',adminAuth,async(req,res)=>{
     const partner = Partner.findById(id)
     if(!partner)
     {
-        return res.status(404).send(`partner ${id} not found`);
+        return res.status(200).send(`partner ${id} not found`);
     }
     const edit = await Partner.findByIdAndUpdate(id,{statusbooking:true},{returnOriginal:false})
     return res.status(200).send({message:`เปิดได้ไอดีpartner ${id} `,partner:edit})
@@ -286,7 +286,7 @@ router.put('/unstatusbooking/:id',adminAuth,async(req,res)=>{
        const partner = Partner.findById(id)
     if(!partner)
     {
-        return res.status(404).send(`partner ${id} not found`);
+        return res.status(200).send(`partner ${id} not found`);
     }
     const edit = await Partner.findByIdAndUpdate(id,{statusbooking:false},{returnOriginal:false})
     return res.status(200).send({message:`ปิดได้ไอดีpartner ${id} `,partner:edit})
@@ -298,14 +298,14 @@ router.post('/picturebank/:id',async(req,res)=>{
         const id = req.params.id;
         const partner = await Partner.findById(id);
         if(!partner){
-            return res.status(404).send(`partner id ${id} not found`);
+            return res.status(200).send(`partner id ${id} not found`);
         }
         let upload = multer({ storage: storage }).array("imgbank", 20);
         upload(req, res, async function (err) {
             const reqFiles = [];
             const result=[];
             if (!req.files) {
-                res.status(400).send({ message: "ไม่ได้ส่งภาพมา", status: false });
+                res.status(200).send({ message: "ไม่ได้ส่งภาพมา", status: false });
             } else {
                 const url = req.protocol + "://" + req.get("host");
                 for (var i = 0; i < req.files.length; i++) {
@@ -325,7 +325,7 @@ router.post('/picturebank/:id',async(req,res)=>{
                         result:result,
                     });
                 }else{
-                    return res.status(404).send({message:`อัพเดทข้อมูลล้มเหลว`});
+                    return res.status(200).send({message:`อัพเดทข้อมูลล้มเหลว`});
                 }
             }
           })
@@ -344,7 +344,7 @@ router.delete('/:id/picturebank/:image_idcard',async(req,res)=>{
     const partner = await Partner.findById(partnerid);
   
     if(!partner){
-        return res.status(404).send(`partner ${partnerid} not found`);
+        return res.status(200).send(`partner ${partnerid} not found`);
     }
     await deleteFile(pictureid);
     const updatedata = partner.image_bank.filter(image => image !== pictureid)

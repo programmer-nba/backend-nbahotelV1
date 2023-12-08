@@ -23,7 +23,7 @@ router.post("/member", async (req, res) => {
       return status
     })
     if(Check === true){
-      return res.status(400).send({status:false,message:`เบอร์ ${telephone} ซ้ำ กรุณาเปลี่ยนใหม่`})
+      return res.status(200).send({status:false,message:`เบอร์ ${telephone} ซ้ำ กรุณาเปลี่ยนใหม่`})
     }
 
     // รับค่า req 
@@ -62,7 +62,7 @@ router.post("/partner", async (req, res) => {
       return status
     })
     if(Check === true){
-      return res.status(400).send({status:false,message:`เบอร์ ${telephone} ซ้ำ กรุณาเปลี่ยนใหม่`})
+      return res.status(200).send({status:false,message:`เบอร์ ${telephone} ซ้ำ กรุณาเปลี่ยนใหม่`})
     }
 
     // รับค่า req 
@@ -106,7 +106,7 @@ router.post("/admin",adminAuth, async (req, res) => {
       return status
     })
     if(Check === true){
-      return res.status(400).send({status:false,message:`เบอร์ ${telephone} ซ้ำ กรุณาเปลี่ยนใหม่`})
+      return res.status(200).send({status:false,message:`เบอร์ ${telephone} ซ้ำ กรุณาเปลี่ยนใหม่`})
     }
     // รับค่า req 
     const Admindata = new Admin({

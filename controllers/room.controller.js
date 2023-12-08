@@ -41,7 +41,7 @@ module.exports.GetPartner = async (req,res) => {
 
         const result = await Room.find({ partner_id: partner._id }).populate('partner_id').populate('type');
         if (!result) {
-            return res.status(404).send('Hotel room not found');
+            return res.status(200).send('Hotel room not found');
         }
         return res.status(200).send(result);
         
@@ -59,7 +59,7 @@ module.exports.Create = async (req, res) => {
     try {
         const roomType = await RoomType.findById(req.body.type);
         if(!roomType) {
-            return res.status(404).send({message:'Room type not found'});
+            return res.status(200).send({message:'Room type not found'});
         }
 
         // เรียก token มาดึง partner_id
@@ -112,11 +112,11 @@ module.exports.Update = async (req, res) => {
 
         const room = await Room.findById(id);
         if (!room) {
-            return res.status(404).send(`Room ${id} not found`);
+            return res.status(200).send(`Room ${id} not found`);
         }
         const roomType = await RoomType.findById(req.body.type);
         if(!roomType) {
-            return res.status(404).send({message:'Room type not found'});
+            return res.status(200).send({message:'Room type not found'});
         }
         const data = {
             name:req.body.name,

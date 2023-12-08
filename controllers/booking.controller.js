@@ -35,16 +35,16 @@ module.exports.addbooking = async (req, res) => {
     const price = req.body.price;
     //เช็คว่ารับค่ามาหรือเปล่า
     if (!member_id || !room_id || !date_from || !date_to || !price) {
-      res.status(400).send({message: "กรุณากรอกข้อมูลให้ครบ"});
+      res.status(200).send({message: "กรุณากรอกข้อมูลให้ครบ"});
     }
     //เช็คว่ามีข้อมูลใน member hotel room data หรือเปล่า
     const member = await Member.findOne({_id:member_id});
     if (!member) {
-      res.status(400).send({message: "หาข้อมูล member ไม่เจอ"});
+      res.status(200).send({message: "หาข้อมูล member ไม่เจอ"});
     }
     const room = await Room.findOne({_id: room_id});
     if (!room) {
-      res.status(400).send({message: "หาข้อมูล room ไม่เจอ"});
+      res.status(200).send({message: "หาข้อมูล room ไม่เจอ"});
     }
 
     const booking = new Booking({
@@ -91,7 +91,7 @@ module.exports.GetByid = async (req, res) => {
       ]
     });;
     if (!booking) {
-      return res.status(404).send("หาข้อมูล booking ไม่เจอ");
+      return res.status(200).send("หาข้อมูล booking ไม่เจอ");
     }
     return res.status(200).send(booking);
   } catch (error) {
@@ -105,7 +105,7 @@ module.exports.GetByroom = async (req, res) => {
     const room_id = req.params.id;
     const booking = await Booking.findOne({room_id: room_id}).populate("member_id").populate("room_id");
     if (!booking) {
-      return res.status(404).send("หาข้อมูล booking ไม่เจอ");
+      return res.status(200).send("หาข้อมูล booking ไม่เจอ");
     }
     return res.status(200).send(booking);
   } catch (error) {
@@ -122,7 +122,7 @@ module.exports.GetBymember = async (req, res) => {
     const member_id = member._id;
     const booking = await Booking.find({member_id: member_id}).populate("member_id").populate("room_id");
     if (!booking) {
-      return res.status(404).send("หาข้อมูล booking ไม่เจอ");
+      return res.status(200).send("หาข้อมูล booking ไม่เจอ");
     }
     return res.status(200).send({status:true,data:booking});
   } catch (error) {
@@ -149,7 +149,7 @@ module.exports.GetBypartner = async (req, res) => {
     });
   
     if (!booking) {
-      return res.status(404).send("หาข้อมูล booking ไม่เจอ");
+      return res.status(200).send("หาข้อมูล booking ไม่เจอ");
     }
     return res.status(200).send({status:true,data:booking});
   } catch (error) {
@@ -175,7 +175,7 @@ module.exports.GetBypartnerandpayment = async (req, res) => {
     });
   
     if (!booking) {
-      return res.status(404).send("หาข้อมูล booking ไม่เจอ");
+      return res.status(200).send("หาข้อมูล booking ไม่เจอ");
     }
     const book_id = booking.map(booking=>booking._id)
     const payment = await Payment.PrePayment.find({booking_id:{$in:book_id}})
@@ -202,7 +202,7 @@ module.exports.AcceptBooking = async (req, res) => {
       .populate("room_id");
     if (!edit) {
       return res
-        .status(404)
+        .status(200)
         .send({status: false, message: "id ที่ส่งมาไม่มีในข้อมูล Booking"});
     }
     return res.status(200).send({
@@ -229,7 +229,7 @@ module.exports.unacceptbooking = async (req, res) => {
 
   if (!edit) {
     return res
-      .status(404)
+      .status(200)
       .send({status: false, message: "id ที่ส่งมาไม่มีในข้อมูล Booking"});
   }
   return res.status(200).send({
@@ -251,7 +251,7 @@ module.exports.Payment = async (req, res) => {
       //console.log(req.files)
       //เช็คว่าไฟล์มาไหม
       if (!req.files) {
-        res.status(500).send({message: "มีบางอย่างผิดพลาด", status: false});
+        res.status(200).send({message: "มีบางอย่างผิดพลาด", status: false});
       } else {
         //ถ้ามา
         const url = req.protocol + "://" + req.get("host");
@@ -270,7 +270,7 @@ module.exports.Payment = async (req, res) => {
     };
     const bookingdata = await Booking.findOne({_id: id});
     if (!bookingdata) {
-      return res.status(404).send({status: false, message: "id ที่ส่งมาไม่มีในข้อมูล Booking"});
+      return res.status(200).send({status: false, message: "id ที่ส่งมาไม่มีในข้อมูล Booking"});
     }
     // เพิ่มหลักฐานการจ่ายเงิน
     const booking_id = bookingdata._id;
@@ -287,7 +287,7 @@ module.exports.Payment = async (req, res) => {
     //แก้ไขข้อมูล
     const editpaymentid = await Booking.findByIdAndUpdate({_id:id},{$push:{status:newStatus}},{new:true})
     if(!editpaymentid){
-        return res.status(404).send({status:false,message:"id ที่ส่งมาไม่มีในข้อมูล Booking"})
+        return res.status(200).send({status:false,message:"id ที่ส่งมาไม่มีในข้อมูล Booking"})
     }
     return res.status(200).send({status:true,message:`คุณได้ส่งหลักฐานการชำระเงินเรียบร้อย แล้วรอยืนยันการชำระเงิน`,update:editpaymentid,payment:addpayment,file:reqFiles})
     })
@@ -318,7 +318,7 @@ module.exports.confirmbookingpayment = async (req, res) => {
   );
   if (!editpayment) {
     return res
-      .status(404)
+      .status(200)
       .send({status: false, message: "id ที่ส่งมาไม่มีในข้อมูล Payment"});
   }
   const editbooking = await Booking.findByIdAndUpdate(
@@ -329,7 +329,7 @@ module.exports.confirmbookingpayment = async (req, res) => {
 
   if (!editbooking) {
     return res
-      .status(404)
+      .status(200)
       .send({status: false, message: "id ที่ส่งมาไม่มีในข้อมูล Booking"});
   }
   const checkin = new Checkin_out({
@@ -363,7 +363,7 @@ module.exports.unconfirmbookingpayment = async (req, res) => {
   //หาข้อมูล booking id
   const findbooking = await Payment.PrePayment.findOne({_id:payment_id})
   if(!findbooking){
-    return res.status(404).send({status: false, message: "id ที่ส่งมาไม่มีในข้อมูล Payment_id"})
+    return res.status(200).send({status: false, message: "id ที่ส่งมาไม่มีในข้อมูล Payment_id"})
   }
   //เพิ่มสถานะ booking
   const editbooking = await Booking.findByIdAndUpdate(
@@ -372,7 +372,7 @@ module.exports.unconfirmbookingpayment = async (req, res) => {
     {new: true}
   )
   if (!editbooking) {
-    return res.status(404).send({status: false, message: "id ที่ส่งมาไม่มีในข้อมูล Booking"})
+    return res.status(200).send({status: false, message: "id ที่ส่งมาไม่มีในข้อมูล Booking"})
   }
   return res.status(200).send({
     status: true,
