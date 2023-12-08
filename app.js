@@ -45,6 +45,7 @@ app.use(prefix+'/requesteditroom',require('./routes/requesteditroom'))
 app.use(prefix+'/contractmember',require('./routes/contractmember'))
 app.use(prefix+'/notification',require('./routes/notification'))
 app.use(prefix+'/review',require('./routes/review'))
+app.use(prefix+'/log',require('./routes/log'))
 app.use((req, res, next) => {
     res.header('Access-Control-Allow-Origin', '*'); // หรือกำหนด origin ที่เฉพาะเจาะจง
     res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');

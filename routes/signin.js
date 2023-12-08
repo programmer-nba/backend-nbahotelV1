@@ -10,6 +10,9 @@ const Admin = require("../models/admin.schema")
 const {default: axios} = require("axios")
 const MemberAuth = require('../authentication/memberauth')
 
+const loginlogadmin = require('../models/loginlogadmin.schema')
+const loginlogpartner =require('../models/loginlogpartner.schema')
+const loginlogmember = require('../models/loginlogmember.schema')
 
 async function checklogin(telephone,password){
   let bcryptpassword = ""
@@ -83,13 +86,26 @@ router.post('/', async(req,res)=>{
      }
      const secretKey = process.env.SECRET_KEY
      const token = jwt.sign(payload,secretKey,{expiresIn:"4h"})
-    //  req.session.users = payload
-    //  req.session.save()
       if(roles == "admin"){
+        const logadmin = new loginlogadmin({
+          ipaddress:req.header["ipadress"],
+          admin_id:checksignin._id
+        });
+        await logadmin.save()
         return res.status(200).send({ status: true, data: payload, token: token})
       } else if (roles =="partner"){
+        const logpartner = new loginlogpartner({
+          ipaddress:req.header["ipadress"],
+          partner_id:checksignin._id
+        });
+        await logpartner.save()
         return res.status(200).send({ status: true, data: payload, token: token})
       } else{
+        const logmember = new loginlogmember({
+          ipaddress:req.header["ipadress"],
+          member_id:checksignin._id
+        });
+        await logmember.save()
         return res.status(200).send({ status: true, data: payload, token: token})
      }
   } catch (error) {
