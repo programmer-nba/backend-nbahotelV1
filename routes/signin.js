@@ -61,9 +61,9 @@ router.post('/', async(req,res)=>{
     })
     
     if(checksignin === "user not found"){
-      return res.status(200).send({ status: false, message: "user not found" });
+      return res.status(200).send({ status: false, message: "ไม่มีผู้ใช้ในระบบ" });
     } else if(checksignin === "Invalid Password"){
-      return res.status(200).send({ status: false, message: "Invalid Password" })
+      return res.status(200).send({ status: false, message: "พาสเวิร์ดไม่ถูกต้อง" })
     }
     if(roles=== "partner"){
       if(checksignin.status === false){
