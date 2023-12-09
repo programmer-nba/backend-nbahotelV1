@@ -88,21 +88,21 @@ router.post('/', async(req,res)=>{
      const token = jwt.sign(payload,secretKey,{expiresIn:"4h"})
       if(roles == "admin"){
         const logadmin = new loginlogadmin({
-          ipaddress:req.header["ipadress"],
+          ipaddress:req.headers["ipadress"],
           admin_id:checksignin._id
         });
         await logadmin.save()
         return res.status(200).send({ status: true, data: payload, token: token})
       } else if (roles =="partner"){
         const logpartner = new loginlogpartner({
-          ipaddress:req.header["ipadress"],
+          ipaddress:req.headers["ipadress"],
           partner_id:checksignin._id
         });
         await logpartner.save()
         return res.status(200).send({ status: true, data: payload, token: token})
       } else{
         const logmember = new loginlogmember({
-          ipaddress:req.header["ipadress"],
+          ipaddress:req.headers["ipadress"],
           member_id:checksignin._id
         });
         await logmember.save()
