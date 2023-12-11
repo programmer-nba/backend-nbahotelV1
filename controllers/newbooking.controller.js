@@ -386,3 +386,46 @@ module.exports.unconfirmbookingpayment = async (req, res) => {
   });
 };
 
+module.exports.getpaymentall = async (req, res) => {
+  try {
+    const payment = await Payment.PrePayment.find().populate({ 
+      path: "booking_id", 
+      populate: [
+        { path: "member_id" },
+        { 
+          path: "room_id",
+          populate:[
+            {path:"partner_id"},
+            {path:"type"}
+          ] 
+        } 
+      ]
+    })
+    return res.status(200).send({status:true,payment:payment});
+  } catch (error) {
+    return res.status(500).send({status:false,error:error.message});
+  }
+}
+
+module.exports.getpaymentbyid = async (req, res) => {
+  try {
+    const payment = await Payment.PrePayment.findById(req.params.id).populate({ 
+      path: "booking_id", 
+      populate: [
+        { path: "member_id" },
+        { 
+          path: "room_id",
+          populate:[
+            {path:"partner_id"},
+            {path:"type"}
+          ] 
+        } 
+      ]
+    })
+    return res.status(200).send({status:true,payment:payment});
+  } catch (error) {
+    return res.status(500).send({status:false,error:error.message});
+  }
+}
+
+
