@@ -31,9 +31,9 @@ router.get('/room/:id',memberAuth.all,Booking.GetByroom)
 //จ่ายเงิน
 router.put('/paymentBooking/:id',memberAuth.verifyTokenmember,Booking.Payment)
 //ยืนยันการจ่ายเงิน
-router.put('/confirmBookingPayment/:id',partnerAuth.onlypartner,Booking.confirmbookingpayment)
+router.put('/confirmBookingPayment/:id',adminAuth,Booking.confirmbookingpayment)
 //ไม่ยืนยันการจ่ายเงิน
-router.put('/Unconfirmbookingpayment/:id',partnerAuth.onlypartner,Booking.unconfirmbookingpayment)
+router.put('/Unconfirmbookingpayment/:id',adminAuth,Booking.unconfirmbookingpayment)
 
 
 module.exports = router;
