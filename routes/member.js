@@ -114,7 +114,7 @@ router.put('/:id',memberAuth.verifyTokenmember, async (req,res)=>{
 })
 
 //ลบข้อมูล member
- router.delete('/:id',memberAuth.verifyTokenmember, async(req,res)=>{
+ router.delete('/:id', async(req,res)=>{
     try{
         const id = req.params.id
         const checkofmember = await Member.findOne({_id:id})
