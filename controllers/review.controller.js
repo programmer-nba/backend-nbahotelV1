@@ -43,7 +43,33 @@ module.exports.getbyid = async (req,res) =>{
         return res.status(500).send({status:false,error:error.message});
       }
 }
+module.exports.getbyroom = async (req,res) =>{
+    try {
+        const id = req.params.id
+        //หาข้อมูล booking id
+        const findbooking = await Booking.find({room_id:id})
+        if(!findbooking){
+            return res.status(200).send({status: false, message: "id ที่ส่งมาไม่มีในข้อมูล room_id"})
+        }
+        const Booking_id = findbooking.map(findbooking=>findbooking._id)
 
+        const review = await Review.find({ booking_id: { $in: Booking_id } }).populate({ 
+            path: "booking_id", 
+            populate: [
+              { path: "member_id" },
+                { 
+                    path: "room_id",
+                    populate:[
+                        {path:"partner_id"}
+                    ]
+                } 
+            ]
+          });
+        return res.status(200).send({status:true,data:review})
+    }catch (error) {
+        return res.status(500).send({status:false,error:error.message});
+    }
+}
 module.exports.getbytoken = async (req,res) =>{
     try {
         let token = req.headers["token"]

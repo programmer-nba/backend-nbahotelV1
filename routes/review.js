@@ -11,7 +11,8 @@ router.get('/',memberAuth.all,Review.getall)
 
 //ค้นหารีวิว by id
 router.get('/byid/:id',memberAuth.all,Review.getbyid)
-
+//ค้นหารีวิว by room_id
+router.get('/byroom/:id',Review.getbyroom)
 //ค้นหารีวิวตาม token
 router.get('/token/',memberAuth.all,Review.getbytoken)
 
