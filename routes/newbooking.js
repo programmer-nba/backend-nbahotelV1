@@ -26,7 +26,7 @@ router.get('/member/',memberAuth.all,Booking.GetBymember)
 router.get('/:id',memberAuth.all,Booking.GetByid)
 
 //เรียกข้อมูลการจองตาม room_id
-router.get('/room/:id',memberAuth.all,Booking.GetByroom)
+router.get('/room/:id',Booking.GetByroom)
 
 //จ่ายเงิน
 router.put('/paymentBooking/:id',memberAuth.verifyTokenmember,Booking.Payment)
