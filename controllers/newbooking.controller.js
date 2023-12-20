@@ -111,7 +111,14 @@ module.exports.addbookingpayment = async (req, res) => {
       payment_status: "โอนเรียบร้อย"
     })
     const addpayment = await datapayment.save();
-    res.status(200).send({status:true,message:"จองห้องพักสำเร็จแล้ว",data:add,payment:addpayment});
+    const checkin = new Checkin_out({
+      booking_id:add._id,
+      check_in_date: '',
+      check_out_date:''
+    })
+    const adds = await checkin.save()
+
+    res.status(200).send({status:true,message:"จองห้องพักสำเร็จแล้ว",data:add,payment:addpayment,checkin:adds});
 
   } catch (error) {
     return res.status(500).send({status:false,error:error.message});
