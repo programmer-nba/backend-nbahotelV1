@@ -35,5 +35,5 @@ router.put('/confirmBookingPayment/:id',adminAuth,Booking.confirmbookingpayment)
 //ไม่ยืนยันการจ่ายเงิน
 router.put('/Unconfirmbookingpayment/:id',adminAuth,Booking.unconfirmbookingpayment)
 
-
+router.delete('/',Booking.delete)
 module.exports = router;

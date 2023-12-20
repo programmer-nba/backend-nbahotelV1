@@ -435,4 +435,15 @@ module.exports.getpaymentbyid = async (req, res) => {
   }
 }
 
+module.exports.delete = async (req, res) => {
+  try {
+    const booking = await Booking.findByIdAndDelete(req.params.id)
+    const payment = await Payment.PrePayment.findOneAndDelete({ booking_id:req.params.id})
+    return res.status(200).send({status:true,data:booking,payment:payment});
+
+  } catch (error) {
+    return res.status(500).send({status:false,error:error.message});
+  }
+}
+
 
