@@ -20,6 +20,7 @@ const partnerSchema = new mongoose.Schema({
   bank:{type:String},
   numberbank:{type:String},
   image_bank:{type:[String]},
+  image :{type:String},
   approve : {
     type: [
       {
