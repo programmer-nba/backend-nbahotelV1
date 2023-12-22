@@ -70,6 +70,7 @@ router.post("/partner", async (req, res) => {
       telephone: telephone,
       password: bcrypt.hashSync(req.body.password, 10),
       name: req.body.name,
+      lastname:req.body.lastname,
       idcard:req.body.idcard,
       address:req.body.address,
       tambon:req.body.tambon,

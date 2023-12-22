@@ -26,14 +26,14 @@ router.get('/member/',memberAuth.all,Booking.GetBymember)
 router.get('/:id',memberAuth.all,Booking.GetByid)
 
 //เรียกข้อมูลการจองตาม room_id
-router.get('/room/:id',memberAuth.all,Booking.GetByroom)
+router.get('/room/:id',Booking.GetByroom)
 
 //จ่ายเงิน
 router.put('/paymentBooking/:id',memberAuth.verifyTokenmember,Booking.Payment)
 //ยืนยันการจ่ายเงิน
-router.put('/confirmBookingPayment/:id',partnerAuth.onlypartner,Booking.confirmbookingpayment)
+router.put('/confirmBookingPayment/:id',adminAuth,Booking.confirmbookingpayment)
 //ไม่ยืนยันการจ่ายเงิน
-router.put('/Unconfirmbookingpayment/:id',partnerAuth.onlypartner,Booking.unconfirmbookingpayment)
+router.put('/Unconfirmbookingpayment/:id',adminAuth,Booking.unconfirmbookingpayment)
 
-
+router.delete('/:id',Booking.delete)
 module.exports = router;

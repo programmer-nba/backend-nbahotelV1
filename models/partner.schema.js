@@ -5,6 +5,7 @@ const partnerSchema = new mongoose.Schema({
   telephone: {type: String, required: true,unique: true},
   password:{type: String , required:true},
   name: {type: String,required:true},
+  lastname:{type:String,default:''},
   idcard:{type:String,require:true},
   image_idcard:{ type: [String]},
   address: { type: String, required: true },
@@ -20,6 +21,7 @@ const partnerSchema = new mongoose.Schema({
   bank:{type:String},
   numberbank:{type:String},
   image_bank:{type:[String]},
+  image :{type:String},
   approve : {
     type: [
       {
