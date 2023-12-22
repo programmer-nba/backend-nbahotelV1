@@ -136,6 +136,7 @@ router.put('/:id',paramsAuth.onlypartner, async(req,res)=>{
             telephone: telephone,
             password :password,
             name : name,
+            lastname: req.body.lastname,
             idcard:req.body.idcard,
             image_idcard:image_idcard,
             address:req.body.address,
