@@ -36,7 +36,8 @@ const roomSchema = new mongoose.Schema({
   timebookingstart:{type:Date},//(เฉพาะผู้ปล่อยเช่า)(เวลาเริ่มต้น)
   timebookingend:{type:Date},//(เฉพาะผู้ปล่อยเช่า) (เวลาสิ้นสุด)
   nearlocation:{type:String},//(ติดกับอะไร)
-  distancenearlocation:{type:Number},//(ระยะทางติดกับอะไร)
+  distancenearlocation:{type:Number},//(ระยะทางติดกับอะไร)\
+  starall:{type:Number},
 })
 
 const Room = mongoose.model('Room', roomSchema)

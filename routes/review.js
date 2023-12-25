@@ -10,7 +10,7 @@ const Review = require("../controllers/review.controller")
 router.get('/',memberAuth.all,Review.getall)
 
 //ค้นหารีวิว by id
-router.get('/byid/:id',memberAuth.all,Review.getbyid)
+router.get('/byid/:id',Review.getbyid)
 //ค้นหารีวิว by room_id
 router.get('/byroom/:id',Review.getbyroom)
 //ค้นหารีวิวตาม token

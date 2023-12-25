@@ -65,6 +65,7 @@ module.exports.getbyroom = async (req,res) =>{
                 } 
             ]
           });
+         
         return res.status(200).send({status:true,data:review})
     }catch (error) {
         return res.status(500).send({status:false,error:error.message});
@@ -126,12 +127,20 @@ module.exports.add = async (req,res)=>{
             star: req.body.star,
             detail:req.body.detail
         })
+       
         const add = await data.save()
-        return res.status(200).send({status:true,data:add,message:`รีวิว ${booking.room_id.name} สำเร็จ`})
+        //
+        
+        const findbooking = await Booking.find({room_id:booking.room_id._id})
+        const Booking_id = findbooking.map(findbooking=>findbooking._id)
+        const review = await Review.find({ booking_id: { $in: Booking_id } });
+        const totalstar = review.reduce((sum, review) => sum + review.star, 0)/review.length;
+        const edit = await Room.findByIdAndUpdate(booking.room_id._id,{starall:totalstar},{new:true})
+        return res.status(200).send({status:true,data:add,message:`รีวิว ${booking.room_id.name} สำเร็จ`,edit:edit})
     }catch (error) {
         return res.status(500).send({status:false,error:error.message});
       }
-}
+} 
  
 module.exports.edit = async (req,res)=>{
     try {
@@ -146,7 +155,13 @@ module.exports.edit = async (req,res)=>{
               { path: "room_id" } 
             ]
           });
-        return res.status(200).send({status:true,data:edit,message:`รีวิว ${edit.booking_id.room_id._name} สำเร็จ`})
+
+        const findbooking = await Booking.find({room_id:edit.booking_id.room_id._id})
+        const Booking_id = findbooking.map(findbooking=>findbooking._id)
+        const review = await Review.find({ booking_id: { $in: Booking_id } });
+        const totalstar = review.reduce((sum, review) => sum + review.star, 0)/review.length;
+        const editroom = await Room.findByIdAndUpdate(edit.booking_id.room_id._id,{starall:totalstar},{new:true})
+        return res.status(200).send({status:true,data:edit,room:editroom,message:`รีวิว ${edit.booking_id.room_id._name} สำเร็จ`})
     }catch (error) {
         return res.status(500).send({status:false,error:error.message});
       }
