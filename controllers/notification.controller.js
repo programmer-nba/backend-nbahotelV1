@@ -53,11 +53,41 @@ module.exports.addall = async (req, res) => {
         const decoded =  jwt.verify(token,secretKey)
         // ทำการดึงข้อมูลadmin
         const admin = await Admin.findOne({_id:decoded._id})
-        const notification = new Notification({
-            admin_id:admin._id,  //(รหัสadmin)
-            title: req.body.title,//(หัวข้อ)
-            detail: req.body.detail//(รายละเอียด)
-        })
+        const status = req.body.status
+        let notification = ''
+        if (status != 'only')
+        {
+            notification = new Notification({
+                admin_id:admin._id,  //(รหัสadmin)
+                title: req.body.title,//(หัวข้อ)
+                detail: req.body.detail,//(รายละเอียด)
+                status:req.body.status
+            })
+        }
+        else{
+            if(req.body.partner_id !='' && req.body.partner_id != undefined)
+            {
+                notification = new Notification({
+                    admin_id:admin._id,  //(รหัสadmin)
+                    partner_id:req.body.partner_id,
+                    title: req.body.title,//(หัวข้อ)
+                    detail: req.body.detail,//(รายละเอียด)
+                    status:req.body.status
+                })
+            }
+            if(req.body.member_id !='' && req.body.member_id != undefined)
+            {
+                notification = new Notification({
+                    admin_id:admin._id,  //(รหัสadmin)
+                    member_id:req.body.member_id,
+                    title: req.body.title,//(หัวข้อ)
+                    detail: req.body.detail,//(รายละเอียด)
+                    status:req.body.status
+                })
+            }
+            
+        }
+        
         const add = await notification.save()
         return res.status(200).send({status:true,message:"ได้แจ้งเตือนไปให้ทุกคนเรียบร้อยแล้วแล้ว",data:add})
     }catch (error) {
@@ -71,12 +101,13 @@ module.exports.addpartner = async (req, res) => {
         let token = req.headers["token"]
         const secretKey = "i#ngikanei;#aooldkhfa'"
         const decoded =  jwt.verify(token,secretKey)
-        // ทำการดึงข้อมูลadmin
+        // ทำการดึงข้อมูลpartner
         const partner = await Partner.findOne({_id:decoded._id})
         const notification = new Notification({
-            partner_id:partner._id,  //(รหัสadmin)
+            partner_id:partner._id,  //(รหัสpartner)
             title: req.body.title,//(หัวข้อ)
-            detail: req.body.detail//(รายละเอียด)
+            detail: req.body.detail,//(รายละเอียด)
+            status:"only",
         })
         const add = await notification.save()
         return res.status(200).send({status:true,message:`ได้แจ้งเตือนไปให้คุณ${partner.name}เรียบร้อยแล้วแล้ว`,data:add})
@@ -92,12 +123,13 @@ module.exports.addmember = async (req, res) => {
         let token = req.headers["token"]
         const secretKey = "i#ngikanei;#aooldkhfa'"
         const decoded =  jwt.verify(token,secretKey)
-        // ทำการดึงข้อมูลadmin
+        // ทำการดึงข้อมูลmember
         const member = await Member.findOne({_id:decoded._id})
         const notification = new Notification({
-            member_id:member._id,  //(รหัสadmin)
+            member_id:member._id,  //(รหัสmember)
             title: req.body.title,//(หัวข้อ)
-            detail: req.body.detail//(รายละเอียด)
+            detail: req.body.detail,//(รายละเอียด)
+            status: "only"
         })
         const add = await notification.save()
         return res.status(200).send({status:true,message:`ได้แจ้งเตือนไปให้คุณ${member.name}เรียบร้อยแล้วแล้ว`,data:add})

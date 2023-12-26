@@ -8,10 +8,15 @@ const memberAuth = require('../authentication/memberauth')
 const notification = require('../controllers/notification.controller')
 //แจ้งเตือนทั้งหมด
 router.post('/admin/',adminAuth,notification.addall)
-//แจ้ง partner
+
+
+//แจ้งเฉพาะ  คน partner
 router.post ('/partner/',partnerAuth.verifyTokenpartner,notification.addpartner)
-//แจ้ง member
+//แจ้งเฉพาะ คน member
 router.post ('/member/',memberAuth.verifyTokenmember,notification.addmember)
+
+
+
 
 //ดึงข้อมูลทั้งหมด
 router.get('/',memberAuth.all,notification.getall)

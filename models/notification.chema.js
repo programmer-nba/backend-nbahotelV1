@@ -5,7 +5,9 @@ const Notification = new mongoose.Schema({
     partner_id:{type:mongoose.Schema.Types.ObjectId,ref:'Partner'},//(รหัส partner)
     member_id:{type:mongoose.Schema.Types.ObjectId,ref:'Member'},//(รหัส member)
     title:{type:String}, //(หัวข้อ)
-    detail:{type:String} //(รายละเอียด)
+    detail:{type:String}, //(รายละเอียด)
+    status: { type: String, enum: ['all', 'partner', 'member',"only"], default: 'all' },
+
 });
 
 
